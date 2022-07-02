@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">GW2_PvP-Hub</string>
+    <string name="not_registered_yet">Not registered yet?</string>
+    <string name="login">login</string>
 </resources>
