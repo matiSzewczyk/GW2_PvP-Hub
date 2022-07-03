@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.app.gw2_pvp_hub.databinding.FragmentRegisterBinding
 
@@ -12,6 +14,8 @@ class RegisterFragment : Fragment() {
 
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding
+
+    private val viewModel: RegisterViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,10 +29,37 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val loadingObserver = Observer<Boolean> {
+            if (it == true) {
+                println("should be visible")
+                binding!!.apply {
+                    innerLayout.visibility = View.GONE
+                    progressBar.visibility = View.VISIBLE
+                }
+            } else {
+                println("should be gone")
+                binding!!.apply {
+                    innerLayout.visibility = View.VISIBLE
+                    progressBar.visibility = View.GONE
+                }
+            }
+        }
+        viewModel.isLoading.observe(viewLifecycleOwner, loadingObserver)
+
+        val loginObserver = Observer<Boolean> {
+            if (it == true) {
+                val action = LoginFragmentDirections.actionGlobalTestFragment()
+                findNavController().navigate(action)
+            }
+        }
+        viewModel.loginSuccessful.observe(viewLifecycleOwner, loginObserver)
+
         binding!!.apply {
             loginButton.setOnClickListener {
-                val action = RegisterFragmentDirections.actionGlobalLoginFragment()
-                findNavController().navigate(action)
+                viewModel.registerAsync(
+                    userName.text.toString(),
+                    password.text.toString()
+                )
             }
         }
     }

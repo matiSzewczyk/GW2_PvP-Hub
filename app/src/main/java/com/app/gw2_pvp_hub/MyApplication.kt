@@ -7,10 +7,9 @@ import io.realm.mongodb.App
 import io.realm.mongodb.AppConfiguration
 import io.realm.mongodb.User
 import io.realm.mongodb.sync.SyncConfiguration
-import javax.inject.Inject
 
 @HiltAndroidApp
-class MyApplication @Inject constructor(): Application() {
+class MyApplication : Application() {
 
      val app: App by lazy {
          App(
@@ -21,7 +20,7 @@ class MyApplication @Inject constructor(): Application() {
     private val partition = "default"
     private lateinit var realm: Realm
     private lateinit var config: SyncConfiguration
-    lateinit var user: User
+    private lateinit var user: User
 
     override fun onCreate() {
         super.onCreate()
@@ -29,7 +28,8 @@ class MyApplication @Inject constructor(): Application() {
         Realm.init(this)
     }
 
-    fun createRealmInstance() {
+    fun createRealmInstance(usr: User) {
+        user = usr
         config = SyncConfiguration.Builder(user, partition).build()
         realm = Realm.getInstance(config)
     }

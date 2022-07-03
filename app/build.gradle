@@ -24,7 +24,7 @@ android {
         Properties properties = new Properties()
         properties.load(project.rootProject.file("local.properties").newDataInputStream())
 
-        buildConfigField "String", "MONGODB_REALM_APP_ID", "\"${properties.getProperty("REALM_APP_ID")}\""
+        buildConfigField "String", "MONGODB_REALM_APP_ID", "\"${properties.getProperty("MONGODB_REALM_APP_ID")}\""
     }
 
     realm {

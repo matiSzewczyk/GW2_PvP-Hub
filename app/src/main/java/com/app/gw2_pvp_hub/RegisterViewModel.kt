@@ -9,16 +9,29 @@ import io.realm.mongodb.User
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(): ViewModel() {
-    private val TAG: String = "LoginViewModel"
+class RegisterViewModel @Inject constructor(
+    private val application: MyApplication
+) : ViewModel() {
 
     var isLoading = MutableLiveData(false)
     var loginSuccessful = MutableLiveData(false)
 
-    fun loginAsync(username: String, password: String) {
+    private val TAG: String = "RegisterViewModel"
+
+    fun registerAsync(username: String, password: String) {
         isLoading.postValue(true)
 
-        MyApplication().app.loginAsync(
+        application.app.emailPassword.registerUserAsync(username, password) {
+            if (it.isSuccess) {
+                loginAsync(username, password)
+            } else {
+                Log.e(TAG, "registerAsync: failed to register ${it.error.errorMessage}")
+            }
+        } 
+    }
+
+    private fun loginAsync(username: String, password: String) {
+        application.app.loginAsync(
             Credentials.emailPassword(
                 username,
                 password
@@ -37,4 +50,5 @@ class LoginViewModel @Inject constructor(): ViewModel() {
     private fun createRealm(user: User) {
         MyApplication().createRealmInstance(user)
     }
+
 }
