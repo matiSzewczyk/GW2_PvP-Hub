@@ -2,4 +2,8 @@
     <string name="app_name">GW2_PvP-Hub</string>
     <string name="not_registered_yet">Not registered yet?</string>
     <string name="login">login</string>
+    <string name="register">register</string>
+    <string name="already_have_account">Already have an account?</string>
+    <string name="sign_up">Sign Up!</string>
+    <string name="log_in">Log in!</string>
 </resources>

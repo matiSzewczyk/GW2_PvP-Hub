@@ -11,5 +11,10 @@
     <fragment
         android:id="@+id/testFragment"
         android:name="com.app.gw2_pvp_hub.TestFragment"
-        android:label="TestFragment" /><action android:id="@+id/action_global_testFragment" app:destination="@id/testFragment"/>
+        android:label="TestFragment" />
+    <action android:id="@+id/action_global_testFragment" app:destination="@id/testFragment" />
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.app.gw2_pvp_hub.RegisterFragment"
+        android:label="RegisterFragment" /><action android:id="@+id/action_global_registerFragment" app:destination="@id/registerFragment"/><action android:id="@+id/action_global_loginFragment" app:destination="@id/loginFragment"/>
 </navigation>

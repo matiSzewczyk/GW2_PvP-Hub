@@ -11,7 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.app.gw2_pvp_hub.databinding.FragmentLoginBinding
 
-class LoginFragment : Fragment(R.layout.fragment_login){
+class LoginFragment : Fragment(){
 
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding
@@ -50,11 +50,17 @@ class LoginFragment : Fragment(R.layout.fragment_login){
 
         viewModel.loginSuccessful.observe(viewLifecycleOwner, loginObserver)
 
-        binding!!.loginButton.setOnClickListener {
-            viewModel.loginAsync(
-                binding!!.loginUserName.text.toString(),
-                binding!!.loginPassword.text.toString()
-            )
+        binding!!.apply {
+            loginButton.setOnClickListener {
+                viewModel.loginAsync(
+                    userName.text.toString(),
+                    password.text.toString()
+                )
+            }
+            signupButton.setOnClickListener {
+                val action = LoginFragmentDirections.actionGlobalRegisterFragment()
+                findNavController().navigate(action)
+            }
         }
     }
 
