@@ -31,13 +31,11 @@ class RegisterFragment : Fragment() {
 
         val loadingObserver = Observer<Boolean> {
             if (it == true) {
-                println("should be visible")
                 binding!!.apply {
                     innerLayout.visibility = View.GONE
                     progressBar.visibility = View.VISIBLE
                 }
             } else {
-                println("should be gone")
                 binding!!.apply {
                     innerLayout.visibility = View.VISIBLE
                     progressBar.visibility = View.GONE
