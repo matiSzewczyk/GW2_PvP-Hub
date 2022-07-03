@@ -4,7 +4,10 @@ plugins {
     id 'androidx.navigation.safeargs'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'org.jetbrains.kotlin.kapt'
 }
+
+apply plugin: "realm-android"
 
 android {
     compileSdk 32
@@ -17,6 +20,15 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file("local.properties").newDataInputStream())
+
+        buildConfigField "String", "MONGODB_REALM_APP_ID", "\"${properties.getProperty("REALM_APP_ID")}\""
+    }
+
+    realm {
+        syncEnabled = true
     }
 
     buildFeatures {
@@ -57,4 +69,7 @@ dependencies {
     implementation "com.google.dagger:hilt-android:2.38.1"
     kapt "com.google.dagger:hilt-compiler:2.38.1"
 
+//    //Realm
+//    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1'
+//    implementation 'io.realm.kotlin:library-sync:1.0.0'
 }

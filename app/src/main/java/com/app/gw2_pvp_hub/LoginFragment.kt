@@ -4,14 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.example.gw2_pvp_hub.R
-import com.example.gw2_pvp_hub.databinding.FragmentLoginBinding
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import com.app.gw2_pvp_hub.databinding.FragmentLoginBinding
 
 class LoginFragment : Fragment(R.layout.fragment_login){
 
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding
+
+    private val viewModel: LoginViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -24,9 +28,24 @@ class LoginFragment : Fragment(R.layout.fragment_login){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        
+
+        val loadingObserver = Observer<Boolean> {
+            if (it == true) {
+                Toast.makeText(
+                    context,
+                    "Loading",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
+        viewModel.isLoading?.observe(viewLifecycleOwner, loadingObserver)
+
         binding!!.loginButton.setOnClickListener {
-            // TODO: implement login logic  
+            viewModel.loginAsync(
+                binding!!.loginUserName.text.toString(),
+                binding!!.loginPassword.text.toString()
+            )
         }
     }
 
