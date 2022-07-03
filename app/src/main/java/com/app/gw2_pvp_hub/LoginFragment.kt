@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.app.gw2_pvp_hub.databinding.FragmentLoginBinding
 
 class LoginFragment : Fragment(R.layout.fragment_login){
@@ -38,8 +39,16 @@ class LoginFragment : Fragment(R.layout.fragment_login){
                 ).show()
             }
         }
-
         viewModel.isLoading?.observe(viewLifecycleOwner, loadingObserver)
+
+        val loginObserver = Observer<Boolean> {
+            if (it == true) {
+                val action = LoginFragmentDirections.actionGlobalTestFragment()
+                findNavController().navigate(action)
+            }
+        }
+
+        viewModel.loginSuccessful.observe(viewLifecycleOwner, loginObserver)
 
         binding!!.loginButton.setOnClickListener {
             viewModel.loginAsync(

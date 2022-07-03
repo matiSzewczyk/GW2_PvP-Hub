@@ -27,8 +27,6 @@ class MyApplication @Inject constructor(): Application() {
         super.onCreate()
 
         Realm.init(this)
-
-        println("happened")
     }
 
     fun createRealmInstance() {

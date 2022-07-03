@@ -8,4 +8,8 @@
         android:id="@+id/loginFragment"
         android:name="com.app.gw2_pvp_hub.LoginFragment"
         android:label="LoginFragment" />
+    <fragment
+        android:id="@+id/testFragment"
+        android:name="com.app.gw2_pvp_hub.TestFragment"
+        android:label="TestFragment" /><action android:id="@+id/action_global_testFragment" app:destination="@id/testFragment"/>
 </navigation>
