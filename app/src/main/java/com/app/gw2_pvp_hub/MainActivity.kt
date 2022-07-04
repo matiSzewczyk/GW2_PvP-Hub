@@ -1,8 +1,7 @@
 package com.app.gw2_pvp_hub
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.app.gw2_pvp_hub.R
+import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
