@@ -64,7 +64,7 @@ class RegisterFragment : Fragment() {
         viewModel.errorMsg.observe(viewLifecycleOwner, errorObserver)
 
         binding!!.apply {
-            loginButton.setOnClickListener {
+            registerButton.setOnClickListener {
                 if (userName.text.isEmpty() || password.text.isEmpty() || passwordConfirm.text.isEmpty()) {
                     Toast.makeText(
                         context, R.string.fill_all_values, Toast.LENGTH_SHORT
@@ -81,6 +81,11 @@ class RegisterFragment : Fragment() {
                     userName.text.toString(),
                     password.text.toString()
                 )
+            }
+
+            loginButton.setOnClickListener {
+                val action = RegisterFragmentDirections.actionGlobalLoginFragment()
+                findNavController().navigate(action)
             }
         }
     }
