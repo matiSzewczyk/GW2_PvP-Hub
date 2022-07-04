@@ -10,7 +10,7 @@ import io.realm.mongodb.User
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(): ViewModel() {
+class LoginViewModel @Inject constructor() : ViewModel() {
     private val TAG: String = "LoginViewModel"
 
     private var _isLoading = MutableLiveData(false)

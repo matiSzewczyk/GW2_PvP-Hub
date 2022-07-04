@@ -8,15 +8,17 @@
         android:id="@+id/inner_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
         <EditText
             android:id="@+id/user_name"
             android:layout_width="200dp"
             android:layout_height="50dp"
             android:layout_marginBottom="20dp"
+            android:hint="@string/username"
             android:inputType="text"
             app:layout_constraintBottom_toTopOf="@id/password"
             app:layout_constraintEnd_toEndOf="parent"
@@ -28,6 +30,7 @@
             android:layout_width="200dp"
             android:layout_height="50dp"
             android:layout_marginBottom="20dp"
+            android:hint="@string/password"
             android:inputType="textPassword"
             app:layout_constraintBottom_toTopOf="@id/login_button"
             app:layout_constraintEnd_toEndOf="parent"
@@ -38,9 +41,9 @@
             android:id="@+id/login_button"
             android:layout_width="150dp"
             android:layout_height="50dp"
+            android:background="@android:color/transparent"
             android:text="@string/login"
             android:textColor="@color/black"
-            android:background="@android:color/transparent"
             app:layout_constraintBottom_toTopOf="@id/login_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -51,8 +54,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
             <TextView
                 android:id="@+id/not_registered_text"
@@ -83,9 +86,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

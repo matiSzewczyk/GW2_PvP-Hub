@@ -8,4 +8,7 @@
     <string name="log_in">Log in!</string>
     <string name="fill_all_values">Please fill all the fields</string>
     <string name="passwords_dont_match">Passwords do not match.</string>
+    <string name="username">username</string>
+    <string name="password">password</string>
+    <string name="confirm_password">confirm password</string>
 </resources>

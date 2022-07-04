@@ -11,7 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.app.gw2_pvp_hub.databinding.FragmentLoginBinding
 
-class LoginFragment : Fragment(){
+class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding
