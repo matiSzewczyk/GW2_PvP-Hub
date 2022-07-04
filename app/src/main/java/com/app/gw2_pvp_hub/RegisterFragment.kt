@@ -54,15 +54,29 @@ class RegisterFragment : Fragment() {
         viewModel.loginSuccessful.observe(viewLifecycleOwner, loginObserver)
 
         val errorObserver = Observer<String> {
-            if (it.isNotEmpty())
+            if (it.isNotEmpty()) {
                 Toast.makeText(
                     context, it.toString(), Toast.LENGTH_SHORT
                 ).show()
+                viewModel.clearError()
+            }
         }
         viewModel.errorMsg.observe(viewLifecycleOwner, errorObserver)
 
         binding!!.apply {
             loginButton.setOnClickListener {
+                if (userName.text.isEmpty() || password.text.isEmpty() || passwordConfirm.text.isEmpty()) {
+                    Toast.makeText(
+                        context, R.string.fill_all_values, Toast.LENGTH_SHORT
+                    ).show()
+                    return@setOnClickListener
+                }
+                if (password.text.toString() != passwordConfirm.text.toString()) {
+                    Toast.makeText(
+                        context, R.string.passwords_dont_match, Toast.LENGTH_SHORT
+                    ).show()
+                    return@setOnClickListener
+                }
                 viewModel.registerAsync(
                     userName.text.toString(),
                     password.text.toString()

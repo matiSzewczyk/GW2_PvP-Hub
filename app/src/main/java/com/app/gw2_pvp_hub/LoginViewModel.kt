@@ -1,6 +1,7 @@
 package com.app.gw2_pvp_hub
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,11 +13,17 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(): ViewModel() {
     private val TAG: String = "LoginViewModel"
 
-    var isLoading = MutableLiveData(false)
-    var loginSuccessful = MutableLiveData(false)
+    private var _isLoading = MutableLiveData(false)
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
+    private var _loginSuccessful = MutableLiveData(false)
+    val loginSuccessful: LiveData<Boolean> get() = _loginSuccessful
+
+    private val _errorMsg = MutableLiveData("")
+    val errorMsg: LiveData<String> get() = _errorMsg
 
     fun loginAsync(username: String, password: String) {
-        isLoading.postValue(true)
+        _isLoading.postValue(true)
 
         MyApplication().app.loginAsync(
             Credentials.emailPassword(
@@ -26,15 +33,20 @@ class LoginViewModel @Inject constructor(): ViewModel() {
         ) {
             if (it.isSuccess) {
                 createRealm(it.get())
-                loginSuccessful.postValue(true)
+                _loginSuccessful.postValue(true)
             } else {
+                _errorMsg.postValue("Failed to login: ${it.error.errorMessage}")
                 Log.e(TAG, "loginAsync: Failed to log in ${it.error.errorMessage}")
             }
-            isLoading.postValue(false)
+            _isLoading.postValue(false)
         }
     }
 
     private fun createRealm(user: User) {
         MyApplication().createRealmInstance(user)
+    }
+
+    fun clearError() {
+        _errorMsg.postValue("")
     }
 }

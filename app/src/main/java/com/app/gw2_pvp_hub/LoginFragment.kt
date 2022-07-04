@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -52,12 +53,29 @@ class LoginFragment : Fragment(){
         }
         viewModel.loginSuccessful.observe(viewLifecycleOwner, loginObserver)
 
+        val errorObserver = Observer<String> {
+            println("it: $it")
+            if (it.isNotEmpty()) {
+                Toast.makeText(
+                    context, it.toString(), Toast.LENGTH_SHORT
+                ).show()
+                viewModel.clearError()
+            }
+        }
+        viewModel.errorMsg.observe(viewLifecycleOwner, errorObserver)
+
         binding!!.apply {
             loginButton.setOnClickListener {
-                viewModel.loginAsync(
-                    userName.text.toString(),
-                    password.text.toString()
-                )
+                if (userName.text.isNotEmpty() && password.text.isNotEmpty()) {
+                    viewModel.loginAsync(
+                        userName.text.toString(),
+                        password.text.toString()
+                    )
+                } else {
+                    Toast.makeText(
+                        context, R.string.fill_all_values, Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
             signupButton.setOnClickListener {
                 val action = LoginFragmentDirections.actionGlobalRegisterFragment()

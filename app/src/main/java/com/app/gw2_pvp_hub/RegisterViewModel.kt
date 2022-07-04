@@ -12,24 +12,31 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor() : ViewModel() {
 
-    var isLoading = MutableLiveData(false)
-    var loginSuccessful = MutableLiveData(false)
+    private var _isLoading = MutableLiveData(false)
+    val isLoading: LiveData<Boolean> get() = _isLoading
 
-    private var _errorMsg = MutableLiveData("")
+    private var _loginSuccessful = MutableLiveData(false)
+    val loginSuccessful: LiveData<Boolean> get() = _loginSuccessful
+
+    private val _errorMsg = MutableLiveData("")
     val errorMsg: LiveData<String> get() = _errorMsg
+
+    init {
+        _errorMsg.postValue("")
+    }
 
     private val TAG: String = "RegisterViewModel"
 
     fun registerAsync(username: String, password: String) {
-        isLoading.postValue(true)
+        _isLoading.postValue(true)
 
         MyApplication().app.emailPassword.registerUserAsync(username, password) {
             if (it.isSuccess) {
                 loginAsync(username, password)
             } else {
-                _errorMsg.postValue("Failed to register: ${it.error.errorMessage}")
                 Log.e(TAG, "registerAsync: failed to register ${it.error.errorMessage}")
-                isLoading.postValue(false)
+                _isLoading.postValue(false)
+                _errorMsg.postValue("Failed to register: ${it.error.errorMessage}")
             }
         }
     }
@@ -43,11 +50,12 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
         ) {
             if (it.isSuccess) {
                 createRealm(it.get())
-                loginSuccessful.postValue(true)
+                _loginSuccessful.postValue(true)
             } else {
-                Log.e(TAG, "registerAsync: Failed to log in ${it.error.errorMessage}")
+                _errorMsg.postValue("Failed to login: ${it.error.errorMessage}")
+                Log.e(TAG, "loginAsync: Failed to log in ${it.error.errorMessage}")
             }
-            isLoading.postValue(false)
+            _isLoading.postValue(false)
         }
     }
 
@@ -55,4 +63,7 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
         MyApplication().createRealmInstance(user)
     }
 
+    fun clearError() {
+        _errorMsg.postValue("")
+    }
 }
