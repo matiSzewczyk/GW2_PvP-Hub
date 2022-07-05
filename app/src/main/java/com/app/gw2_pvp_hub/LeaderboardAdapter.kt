@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.app.gw2_pvp_hub.databinding.LeaderboardItemBinding
 
 class LeaderboardAdapter(
-    private val players: List<Leaderboard>
+    private val players: Leaderboard
 ) : RecyclerView.Adapter<LeaderboardAdapter.LeaderboardViewHolder>() {
 
     inner class LeaderboardViewHolder(val binding: LeaderboardItemBinding) : RecyclerView.ViewHolder(binding.root)
@@ -22,7 +22,7 @@ class LeaderboardAdapter(
 
     override fun onBindViewHolder(holder: LeaderboardViewHolder, position: Int) {
         holder.binding.apply {
-            playerName.text = players[position][position].name
+            playerName.text = players[position].name
         }
     }
 
