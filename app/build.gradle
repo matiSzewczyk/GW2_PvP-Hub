@@ -5,9 +5,8 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'org.jetbrains.kotlin.kapt'
+    id 'realm-android'
 }
-
-apply plugin: "realm-android"
 
 android {
     compileSdk 32
