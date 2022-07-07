@@ -6,7 +6,7 @@ import retrofit2.http.Path
 
 interface LeaderboardApi {
 
-    @GET("seasons/{id}/leaderboards/ladder/{region}?page_size=250")
+    @GET("seasons/{id}/leaderboards/ladder/{region}?page_size=200")
     suspend fun getLeaderboard(
         @Path("id") id: String,
         @Path("region") region: String

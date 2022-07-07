@@ -15,7 +15,7 @@ class LeaderboardViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val TAG: String = "LeaderboardViewModel"
-    private var _leaderboard = MutableLiveData<Leaderboard>()
+    private var _leaderboard = MutableLiveData<Leaderboard>(Leaderboard())
     val leaderboard: LiveData<Leaderboard> get() = _leaderboard
 
     init {

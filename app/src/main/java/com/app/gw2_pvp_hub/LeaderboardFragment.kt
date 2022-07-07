@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.gw2_pvp_hub.databinding.FragmentLeaderboardBinding
 
@@ -31,10 +31,16 @@ class LeaderboardFragment : Fragment(R.layout.fragment_leaderboard){
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
+
+        val leaderboardObserver = Observer<Leaderboard> {
+            println("leaderboard: ${it.toString()}")
+            leaderboardAdapter.notifyDataSetChanged()
+        }
+        viewModel.leaderboard.observe(viewLifecycleOwner, leaderboardObserver)
     }
 
     private fun setupRecyclerView() = binding!!.leaderboardRecyclerView.apply {
-        adapter = LeaderboardAdapter(
+        leaderboardAdapter = LeaderboardAdapter(
             viewModel.leaderboard.value!!
         )
         adapter = leaderboardAdapter
