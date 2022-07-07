@@ -54,7 +54,6 @@ class LoginFragment : Fragment() {
         viewModel.loginSuccessful.observe(viewLifecycleOwner, loginObserver)
 
         val errorObserver = Observer<String> {
-            println("it: $it")
             if (it.isNotEmpty()) {
                 Toast.makeText(
                     context, it.toString(), Toast.LENGTH_SHORT

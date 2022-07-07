@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.app.gw2_pvp_hub.databinding.LeaderboardItemBinding
 
 class LeaderboardAdapter(
-    private val players: Leaderboard
+    private var players: Leaderboard
 ) : RecyclerView.Adapter<LeaderboardAdapter.LeaderboardViewHolder>() {
 
     inner class LeaderboardViewHolder(val binding: LeaderboardItemBinding) : RecyclerView.ViewHolder(binding.root)
@@ -16,7 +16,8 @@ class LeaderboardAdapter(
             LeaderboardItemBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
-                false)
+                false
+            )
         )
     }
 
@@ -27,4 +28,8 @@ class LeaderboardAdapter(
     }
 
     override fun getItemCount() = players.size
+
+    fun submitList(data: Leaderboard?) {
+        players = data!!
+    }
 }

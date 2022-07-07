@@ -15,7 +15,7 @@ class LeaderboardViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val TAG: String = "LeaderboardViewModel"
-    private var _leaderboard = MutableLiveData<Leaderboard>(Leaderboard())
+    private var _leaderboard = MutableLiveData(Leaderboard())
     val leaderboard: LiveData<Leaderboard> get() = _leaderboard
 
     init {
@@ -26,11 +26,10 @@ class LeaderboardViewModel @Inject constructor(
         viewModelScope.launch {
             val response = repository.getLeaderboard()
             if (response.isSuccessful) {
-                _leaderboard.postValue(response.body()!!)
+                _leaderboard.postValue(response.body())
             } else {
                 Log.e(TAG, "getLeaderboard: ${response.errorBody().toString()}")
             }
         }
-
     }
 }

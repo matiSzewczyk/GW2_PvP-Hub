@@ -33,7 +33,7 @@ class LeaderboardFragment : Fragment(R.layout.fragment_leaderboard){
         setupRecyclerView()
 
         val leaderboardObserver = Observer<Leaderboard> {
-            println("leaderboard: ${it.toString()}")
+            leaderboardAdapter.submitList(it)
             leaderboardAdapter.notifyDataSetChanged()
         }
         viewModel.leaderboard.observe(viewLifecycleOwner, leaderboardObserver)
