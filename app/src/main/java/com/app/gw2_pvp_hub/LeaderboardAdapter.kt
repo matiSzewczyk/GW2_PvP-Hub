@@ -23,7 +23,11 @@ class LeaderboardAdapter(
 
     override fun onBindViewHolder(holder: LeaderboardViewHolder, position: Int) {
         holder.binding.apply {
+            playerRank.text = players[position].rank.toString()
             playerName.text = players[position].name
+            playerRating.text = players[position].scores[0].value.toString()
+            playerWins.text = players[position].scores[1].value.toString()
+            playerLosses.text = players[position].scores[2].value.toString()
         }
     }
 
