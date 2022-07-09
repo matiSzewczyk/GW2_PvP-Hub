@@ -41,9 +41,9 @@ class MyApplication : Application() {
 
     fun closeRealm() {
         realm.close()
-        user.logOutAsync() {
+        user.logOutAsync {
             if (it.isSuccess) {
-                Log.e("fak", "closeRealm: Logged out.", )
+                Log.e("fak", "closeRealm: Logged out.")
             } else {
                 Log.e(TAG, "closeRealm: ${it.error}")
             }
