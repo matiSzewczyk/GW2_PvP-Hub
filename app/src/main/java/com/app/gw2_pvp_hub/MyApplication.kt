@@ -1,6 +1,8 @@
 package com.app.gw2_pvp_hub
 
 import android.app.Application
+import android.content.ContentValues.TAG
+import android.util.Log
 import dagger.hilt.android.HiltAndroidApp
 import io.realm.Realm
 import io.realm.mongodb.App
@@ -35,5 +37,16 @@ class MyApplication : Application() {
         user = usr
         config = SyncConfiguration.Builder(user, partition).build()
         realm = Realm.getInstance(config)
+    }
+
+    fun closeRealm() {
+        realm.close()
+        user.logOutAsync() {
+            if (it.isSuccess) {
+                Log.e("fak", "closeRealm: Logged out.", )
+            } else {
+                Log.e(TAG, "closeRealm: ${it.error}")
+            }
+        }
     }
 }

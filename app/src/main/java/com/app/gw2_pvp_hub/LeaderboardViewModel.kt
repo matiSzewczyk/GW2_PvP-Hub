@@ -33,8 +33,8 @@ class LeaderboardViewModel @Inject constructor(
 
     private fun getSeasonList() {
         MyApplication.realm.executeTransactionAsync { realm ->
-            val xd = realm.where(RealmSeason::class.java).findAll()
-            xd.forEach {
+            val result = realm.where(RealmSeason::class.java).findAll()
+            result.forEach {
                 spinnerList.add(0, it.name.toString())
                 _seasonNameList.value!!.add(0, Season(
                     it.id.toString(), it.name.toString()
