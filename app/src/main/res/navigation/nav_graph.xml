@@ -9,10 +9,10 @@
         android:name="com.app.gw2_pvp_hub.LoginFragment"
         android:label="LoginFragment" />
     <fragment
-        android:id="@+id/testFragment"
+        android:id="@+id/leaderboardFragment"
         android:name="com.app.gw2_pvp_hub.LeaderboardFragment"
         android:label="TestFragment" />
-    <action android:id="@+id/action_global_testFragment" app:destination="@id/testFragment" />
+    <action android:id="@+id/action_global_leaderboardFragment" app:destination="@id/leaderboardFragment" />
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.app.gw2_pvp_hub.RegisterFragment"

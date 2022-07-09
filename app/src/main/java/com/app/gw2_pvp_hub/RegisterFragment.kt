@@ -47,7 +47,7 @@ class RegisterFragment : Fragment() {
 
         val loginObserver = Observer<Boolean> {
             if (it == true) {
-                val action = LoginFragmentDirections.actionGlobalTestFragment()
+                val action = LoginFragmentDirections.actionGlobalLeaderboardFragment()
                 findNavController().navigate(action)
             }
         }
