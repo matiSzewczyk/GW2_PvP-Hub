@@ -14,15 +14,29 @@ class LeaderboardViewModel @Inject constructor(
     private val repository: LeaderboardRepository
 ) : ViewModel() {
 
+    var seasonList = mutableListOf<String>()
     private val TAG: String = "LeaderboardViewModel"
+
     private var _leaderboard = MutableLiveData(Leaderboard())
     val leaderboard: LiveData<Leaderboard> get() = _leaderboard
 
+    private var _seasonNameList = MutableLiveData<MutableMap<String, String>>(mutableMapOf())
+    val seasonNameList: LiveData<MutableMap<String, String>> get() = _seasonNameList
+
+
     init {
-        getLeaderboard()
+//        getLeaderboard()
+        getSeasonList()
     }
 
-    private fun getLeaderboard() {
+    private fun getSeasonList() {
+        viewModelScope.launch {
+                _seasonNameList.value!!["yo"] = "th"
+                seasonList = _seasonNameList.value!!.keys.toMutableList()
+        }
+    }
+
+    fun getLeaderboard() {
         viewModelScope.launch {
             val response = repository.getLeaderboard()
             if (response.isSuccessful) {

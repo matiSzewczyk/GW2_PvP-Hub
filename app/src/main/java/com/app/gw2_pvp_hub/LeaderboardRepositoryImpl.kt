@@ -1,5 +1,7 @@
 package com.app.gw2_pvp_hub
 
+import io.realm.RealmResults
+import io.realm.mongodb.RealmResultTask
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 import retrofit2.Response
@@ -15,5 +17,14 @@ class LeaderboardRepositoryImpl @Inject constructor(
             "eu"
             )
         }
+    }
+
+    override suspend fun getSeasonList(): RealmResults<Seasons>? {
+        var result: RealmResults<Seasons>? = null
+            MyApplication.realm.executeTransactionAsync {
+                 result = it.where(Seasons::class.java)
+                    .findAll()
+            }
+            return result
     }
 }
