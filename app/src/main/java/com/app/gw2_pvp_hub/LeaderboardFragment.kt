@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
-import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -37,12 +36,12 @@ class LeaderboardFragment : Fragment(R.layout.fragment_leaderboard),
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
-        val wtf = Observer<MutableList<Season>> {
+        val seasonListObserver = Observer<MutableList<Season>> {
             if (it.isNotEmpty()) {
                 setupSpinner()
             }
         }
-        viewModel.seasonNameList.observe(viewLifecycleOwner, wtf)
+        viewModel.seasonNameList.observe(viewLifecycleOwner, seasonListObserver)
 
         val leaderboardObserver = Observer<Leaderboard> {
             leaderboardAdapter.submitList(it)
