@@ -1,5 +1,6 @@
 package com.app.gw2_pvp_hub
 
+import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,7 +12,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor() : ViewModel() {
-    private val TAG: String = "LoginViewModel"
 
     private var _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean> get() = _isLoading

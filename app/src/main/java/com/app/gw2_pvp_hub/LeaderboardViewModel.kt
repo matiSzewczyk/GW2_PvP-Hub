@@ -1,5 +1,6 @@
 package com.app.gw2_pvp_hub
 
+import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,31 +15,38 @@ class LeaderboardViewModel @Inject constructor(
     private val repository: LeaderboardRepository
 ) : ViewModel() {
 
-    var seasonList = mutableListOf<String>()
-    private val TAG: String = "LeaderboardViewModel"
+
+    var spinnerList = mutableListOf<String>()
 
     private var _leaderboard = MutableLiveData(Leaderboard())
     val leaderboard: LiveData<Leaderboard> get() = _leaderboard
 
-    private var _seasonNameList = MutableLiveData<MutableMap<String, String>>(mutableMapOf())
-    val seasonNameList: LiveData<MutableMap<String, String>> get() = _seasonNameList
-
+    private var _seasonNameList = MutableLiveData<MutableList<Season>>(mutableListOf())
+    val seasonNameList: LiveData<MutableList<Season>> get() = _seasonNameList
 
     init {
-//        getLeaderboard()
         getSeasonList()
+//        viewModelScope.launch {
+//            repository.setSeasonList()
+//        }
     }
 
     private fun getSeasonList() {
-        viewModelScope.launch {
-                _seasonNameList.value!!["yo"] = "th"
-                seasonList = _seasonNameList.value!!.keys.toMutableList()
+        MyApplication.realm.executeTransactionAsync { realm ->
+            val xd = realm.where(RealmSeason::class.java).findAll()
+            xd.forEach {
+                spinnerList.add(it.name.toString())
+                _seasonNameList.value!!.add(Season(
+                    it.id.toString(), it.name.toString()
+                ))
+            }
+            _seasonNameList.postValue(_seasonNameList.value!!)
         }
     }
 
-    fun getLeaderboard() {
+    fun getLeaderboard(position: Int) {
         viewModelScope.launch {
-            val response = repository.getLeaderboard()
+            val response = repository.getLeaderboard(_seasonNameList.value?.get(position)!!.id.toString())
             if (response.isSuccessful) {
                 _leaderboard.postValue(response.body())
             } else {

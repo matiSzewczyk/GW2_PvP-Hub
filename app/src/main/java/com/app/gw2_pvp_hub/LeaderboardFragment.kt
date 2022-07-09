@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -36,7 +37,12 @@ class LeaderboardFragment : Fragment(R.layout.fragment_leaderboard),
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
-        setupSpinner()
+        val wtf = Observer<MutableList<Season>> {
+            if (it.isNotEmpty()) {
+                setupSpinner()
+            }
+        }
+        viewModel.seasonNameList.observe(viewLifecycleOwner, wtf)
 
         val leaderboardObserver = Observer<Leaderboard> {
             leaderboardAdapter.submitList(it)
@@ -50,7 +56,7 @@ class LeaderboardFragment : Fragment(R.layout.fragment_leaderboard),
         val seasonAdapter = ArrayAdapter(
             requireContext(),
             androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
-            viewModel.seasonList
+            viewModel.spinnerList
         )
         seasonSpinner.adapter = seasonAdapter
         seasonSpinner.onItemSelectedListener = this
@@ -70,7 +76,7 @@ class LeaderboardFragment : Fragment(R.layout.fragment_leaderboard),
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        viewModel.getLeaderboard()
+        viewModel.getLeaderboard(position)
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {

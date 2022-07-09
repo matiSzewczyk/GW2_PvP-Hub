@@ -11,4 +11,12 @@ interface LeaderboardApi {
         @Path("id") id: String,
         @Path("region") region: String
     ): Response<Leaderboard>
+
+    @GET("seasons")
+    suspend fun getListofIds(): Response<SeasonId>
+
+    @GET("seasons/{id}")
+    suspend fun getSeasonName(
+        @Path("id") id: String
+    ): Response<SeasonName>
 }

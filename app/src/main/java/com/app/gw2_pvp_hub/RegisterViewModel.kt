@@ -1,5 +1,6 @@
 package com.app.gw2_pvp_hub
 
+import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -25,7 +26,6 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
         _errorMsg.postValue("")
     }
 
-    private val TAG: String = "RegisterViewModel"
 
     fun registerAsync(username: String, password: String) {
         _isLoading.postValue(true)
