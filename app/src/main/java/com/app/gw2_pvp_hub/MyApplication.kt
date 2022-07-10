@@ -38,15 +38,4 @@ class MyApplication : Application() {
         config = SyncConfiguration.Builder(user, partition).build()
         realm = Realm.getInstance(config)
     }
-
-    fun closeRealm() {
-        realm.close()
-        user.logOutAsync {
-            if (it.isSuccess) {
-                Log.e("fak", "closeRealm: Logged out.")
-            } else {
-                Log.e(TAG, "closeRealm: ${it.error}")
-            }
-        }
-    }
 }
