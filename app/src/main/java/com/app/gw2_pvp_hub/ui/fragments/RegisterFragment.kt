@@ -1,4 +1,4 @@
-package com.app.gw2_pvp_hub.ui.Fragments
+package com.app.gw2_pvp_hub.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,7 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.app.gw2_pvp_hub.R
 import com.app.gw2_pvp_hub.databinding.FragmentRegisterBinding
-import com.app.gw2_pvp_hub.ui.ViewModels.RegisterViewModel
+import com.app.gw2_pvp_hub.ui.viewModels.RegisterViewModel
 
 class RegisterFragment : Fragment() {
 

@@ -1,4 +1,4 @@
-package com.app.gw2_pvp_hub.ui.ViewModels
+package com.app.gw2_pvp_hub.ui.viewModels
 
 import android.content.ContentValues.TAG
 import android.util.Log
