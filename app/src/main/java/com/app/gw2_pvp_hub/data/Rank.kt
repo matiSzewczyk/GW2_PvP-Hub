@@ -6,5 +6,5 @@ data class Rank(
     val name: String,
     val overlay: String,
     val overlay_small: String,
-    val tiers: List<TierXX>
+    val tiers: List<TierXXXX>
 )

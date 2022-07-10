@@ -6,9 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.app.gw2_pvp_hub.MyApplication
 import com.app.gw2_pvp_hub.data.LeaderboardItem
-import com.app.gw2_pvp_hub.data.RealmSeason
 import com.app.gw2_pvp_hub.data.Season
 import com.app.gw2_pvp_hub.data.source.LeaderboardRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,16 +35,35 @@ class LeaderboardViewModel @Inject constructor(
     }
 
     private fun getSeasonList() {
-        MyApplication.realm.executeTransactionAsync { realm ->
-            val result = realm.where(RealmSeason::class.java).findAll()
-            result.forEach {
-                spinnerList.add(0, it.name.toString())
-                _seasonNameList.value!!.add(0, Season(
-                    it.id.toString(), it.name.toString()
-                )
-                )
+        viewModelScope.launch {
+            try {
+                val response = repository.getLeaderboardList("all")
+                if (response.isSuccessful) {
+                    response.body()!!.forEach {
+                        _seasonNameList.value!!.add(
+                            Season(
+                                it.id,
+                                it.name,
+                                it.start
+                            )
+                        )
+                    }
+                    // Order the list based on start date
+                    val orderedList = _seasonNameList.value!!.sortedByDescending {
+                        it.start
+                    }.toMutableList()
+
+                    orderedList.forEach {
+                        spinnerList.add(it.name.toString())
+                    }
+
+                    _seasonNameList.postValue(orderedList)
+                } else {
+                    Log.e(TAG, "getSeasonList: ${response.errorBody()!!.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "getSeasonList: ${e.message}")
             }
-            _seasonNameList.postValue(_seasonNameList.value!!)
         }
     }
 
@@ -60,7 +77,7 @@ class LeaderboardViewModel @Inject constructor(
                 }
                 _leaderboard.postValue(_leaderboard.value)
             } else {
-                Log.e(TAG, "getLeaderboard: ${response.errorBody().toString()}")
+                Log.e(TAG, "getLeaderboard: ${response.errorBody()!!.string()}")
             }
         }
     }

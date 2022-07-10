@@ -1,6 +1,6 @@
 package com.app.gw2_pvp_hub.data
 
-data class Ladder(
+data class Legendary(
     val scorings: List<Scoring>,
-    val settings: SettingsX
+    val settings: SettingsXX
 )

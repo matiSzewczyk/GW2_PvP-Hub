@@ -1,5 +1,5 @@
 package com.app.gw2_pvp_hub.data
 
 data class TierXX(
-    val rating: Int
+    val range: List<Int>
 )

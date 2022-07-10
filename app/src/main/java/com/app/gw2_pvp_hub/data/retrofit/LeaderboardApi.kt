@@ -1,11 +1,11 @@
 package com.app.gw2_pvp_hub.data.retrofit
 
 import com.app.gw2_pvp_hub.data.Leaderboard
-import com.app.gw2_pvp_hub.data.SeasonId
-import com.app.gw2_pvp_hub.data.SeasonName
+import com.app.gw2_pvp_hub.data.Leaderboards
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface LeaderboardApi {
 
@@ -16,10 +16,7 @@ interface LeaderboardApi {
     ): Response<Leaderboard>
 
     @GET("seasons")
-    suspend fun getListofIds(): Response<SeasonId>
-
-    @GET("seasons/{id}")
-    suspend fun getSeasonName(
-        @Path("id") id: String
-    ): Response<SeasonName>
+    suspend fun getSeasonList(
+        @Query("ids") ids: String
+    ): Response<Leaderboards>
 }
