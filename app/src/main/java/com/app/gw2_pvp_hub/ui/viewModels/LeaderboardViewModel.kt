@@ -6,8 +6,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.app.gw2_pvp_hub.*
-import com.app.gw2_pvp_hub.data.Leaderboard
+import com.app.gw2_pvp_hub.MyApplication
+import com.app.gw2_pvp_hub.data.LeaderboardItem
 import com.app.gw2_pvp_hub.data.RealmSeason
 import com.app.gw2_pvp_hub.data.Season
 import com.app.gw2_pvp_hub.data.source.LeaderboardRepository
@@ -23,8 +23,8 @@ class LeaderboardViewModel @Inject constructor(
 
     var spinnerList = mutableListOf<String>()
 
-    private var _leaderboard = MutableLiveData(Leaderboard())
-    val leaderboard: LiveData<Leaderboard> get() = _leaderboard
+    private var _leaderboard = MutableLiveData<MutableList<LeaderboardItem>>(mutableListOf())
+    val leaderboard: LiveData<MutableList<LeaderboardItem>> get() = _leaderboard
 
     private var _seasonNameList = MutableLiveData<MutableList<Season>>(mutableListOf())
     val seasonNameList: LiveData<MutableList<Season>> get() = _seasonNameList
@@ -54,7 +54,11 @@ class LeaderboardViewModel @Inject constructor(
         viewModelScope.launch {
             val response = repository.getLeaderboard(_seasonNameList.value?.get(position)!!.id.toString())
             if (response.isSuccessful) {
-                _leaderboard.postValue(response.body())
+                _leaderboard.value?.clear()
+                response.body()!!.forEach {
+                    _leaderboard.value!!.add(it)
+                }
+                _leaderboard.postValue(_leaderboard.value)
             } else {
                 Log.e(TAG, "getLeaderboard: ${response.errorBody().toString()}")
             }

@@ -3,11 +3,11 @@ package com.app.gw2_pvp_hub.ui.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.app.gw2_pvp_hub.data.Leaderboard
+import com.app.gw2_pvp_hub.data.LeaderboardItem
 import com.app.gw2_pvp_hub.databinding.LeaderboardItemBinding
 
 class LeaderboardAdapter(
-    private var players: Leaderboard
+    private var players: List<LeaderboardItem>
 ) : RecyclerView.Adapter<LeaderboardAdapter.LeaderboardViewHolder>() {
 
     inner class LeaderboardViewHolder(val binding: LeaderboardItemBinding) : RecyclerView.ViewHolder(binding.root)
@@ -33,8 +33,4 @@ class LeaderboardAdapter(
     }
 
     override fun getItemCount() = players.size
-
-    fun submitList(data: Leaderboard?) {
-        players = data!!
-    }
 }
