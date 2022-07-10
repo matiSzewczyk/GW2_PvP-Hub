@@ -1,5 +1,8 @@
-package com.app.gw2_pvp_hub
+package com.app.gw2_pvp_hub.data.source
 
+import com.app.gw2_pvp_hub.data.Leaderboard
+import com.app.gw2_pvp_hub.data.SeasonId
+import com.app.gw2_pvp_hub.data.SeasonName
 import retrofit2.Response
 
 interface LeaderboardRepository {

@@ -1,17 +1,18 @@
-package com.app.gw2_pvp_hub
+package com.app.gw2_pvp_hub.ui.ViewModels
 
 import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.app.gw2_pvp_hub.MyApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.realm.mongodb.Credentials
 import io.realm.mongodb.User
 import javax.inject.Inject
 
 @HiltViewModel
-class RegisterViewModel @Inject constructor() : ViewModel() {
+class LoginViewModel @Inject constructor() : ViewModel() {
 
     private var _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean> get() = _isLoading
@@ -22,26 +23,9 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
     private val _errorMsg = MutableLiveData("")
     val errorMsg: LiveData<String> get() = _errorMsg
 
-    init {
-        _errorMsg.postValue("")
-    }
-
-
-    fun registerAsync(username: String, password: String) {
+    fun loginAsync(username: String, password: String) {
         _isLoading.postValue(true)
 
-        MyApplication().app.emailPassword.registerUserAsync(username, password) {
-            if (it.isSuccess) {
-                loginAsync(username, password)
-            } else {
-                Log.e(TAG, "registerAsync: failed to register ${it.error.errorMessage}")
-                _isLoading.postValue(false)
-                _errorMsg.postValue("Failed to register: ${it.error.errorMessage}")
-            }
-        }
-    }
-
-    private fun loginAsync(username: String, password: String) {
         MyApplication().app.loginAsync(
             Credentials.emailPassword(
                 username,

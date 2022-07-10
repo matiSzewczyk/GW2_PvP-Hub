@@ -1,4 +1,4 @@
-package com.app.gw2_pvp_hub
+package com.app.gw2_pvp_hub.ui.Fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,7 +11,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.app.gw2_pvp_hub.data.Leaderboard
+import com.app.gw2_pvp_hub.ui.adapters.LeaderboardAdapter
+import com.app.gw2_pvp_hub.R
+import com.app.gw2_pvp_hub.data.Season
 import com.app.gw2_pvp_hub.databinding.FragmentLeaderboardBinding
+import com.app.gw2_pvp_hub.ui.ViewModels.LeaderboardViewModel
 
 class LeaderboardFragment : Fragment(R.layout.fragment_leaderboard),
     AdapterView.OnItemSelectedListener {

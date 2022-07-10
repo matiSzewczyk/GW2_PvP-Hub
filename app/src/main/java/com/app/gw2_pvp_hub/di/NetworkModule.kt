@@ -1,5 +1,8 @@
-package com.app.gw2_pvp_hub
+package com.app.gw2_pvp_hub.di
 
+import com.app.gw2_pvp_hub.data.retrofit.LeaderboardApi
+import com.app.gw2_pvp_hub.data.source.LeaderboardRepository
+import com.app.gw2_pvp_hub.data.source.LeaderboardRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

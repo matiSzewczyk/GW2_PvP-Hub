@@ -1,4 +1,4 @@
-package com.app.gw2_pvp_hub
+package com.app.gw2_pvp_hub.ui.ViewModels
 
 import android.content.ContentValues.TAG
 import android.util.Log
@@ -6,6 +6,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.gw2_pvp_hub.*
+import com.app.gw2_pvp_hub.data.Leaderboard
+import com.app.gw2_pvp_hub.data.RealmSeason
+import com.app.gw2_pvp_hub.data.Season
+import com.app.gw2_pvp_hub.data.source.LeaderboardRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -38,7 +43,8 @@ class LeaderboardViewModel @Inject constructor(
                 spinnerList.add(0, it.name.toString())
                 _seasonNameList.value!!.add(0, Season(
                     it.id.toString(), it.name.toString()
-                ))
+                )
+                )
             }
             _seasonNameList.postValue(_seasonNameList.value!!)
         }

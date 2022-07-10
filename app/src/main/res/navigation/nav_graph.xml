@@ -6,15 +6,15 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.app.gw2_pvp_hub.LoginFragment"
+        android:name="com.app.gw2_pvp_hub.ui.Fragments.LoginFragment"
         android:label="LoginFragment" />
     <fragment
         android:id="@+id/leaderboardFragment"
-        android:name="com.app.gw2_pvp_hub.LeaderboardFragment"
+        android:name="com.app.gw2_pvp_hub.ui.Fragments.LeaderboardFragment"
         android:label="TestFragment" />
     <action android:id="@+id/action_global_leaderboardFragment" app:destination="@id/leaderboardFragment" />
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.app.gw2_pvp_hub.RegisterFragment"
+        android:name="com.app.gw2_pvp_hub.ui.Fragments.RegisterFragment"
         android:label="RegisterFragment" /><action android:id="@+id/action_global_registerFragment" app:destination="@id/registerFragment"/><action android:id="@+id/action_global_loginFragment" app:destination="@id/loginFragment"/>
 </navigation>

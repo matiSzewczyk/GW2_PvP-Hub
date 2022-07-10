@@ -1,4 +1,4 @@
-package com.app.gw2_pvp_hub
+package com.app.gw2_pvp_hub.data
 
 import io.realm.RealmDictionary
 import io.realm.RealmObject

@@ -1,4 +1,4 @@
-package com.app.gw2_pvp_hub
+package com.app.gw2_pvp_hub.data
 
 data class Rank(
     val description: String,

@@ -1,4 +1,4 @@
-package com.app.gw2_pvp_hub
+package com.app.gw2_pvp_hub.ui.Fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.app.gw2_pvp_hub.R
 import com.app.gw2_pvp_hub.databinding.FragmentLoginBinding
+import com.app.gw2_pvp_hub.ui.ViewModels.LoginViewModel
 
 class LoginFragment : Fragment() {
 
@@ -47,7 +49,8 @@ class LoginFragment : Fragment() {
 
         val loginObserver = Observer<Boolean> {
             if (it == true) {
-                val action = LoginFragmentDirections.actionGlobalLeaderboardFragment()
+                val action =
+                    LoginFragmentDirections.actionGlobalLeaderboardFragment()
                 findNavController().navigate(action)
             }
         }
@@ -77,7 +80,8 @@ class LoginFragment : Fragment() {
                 }
             }
             signupButton.setOnClickListener {
-                val action = LoginFragmentDirections.actionGlobalRegisterFragment()
+                val action =
+                    LoginFragmentDirections.actionGlobalRegisterFragment()
                 findNavController().navigate(action)
             }
         }
