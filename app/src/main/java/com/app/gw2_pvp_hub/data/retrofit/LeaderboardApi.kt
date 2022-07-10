@@ -9,14 +9,14 @@ import retrofit2.http.Query
 
 interface LeaderboardApi {
 
-    @GET("seasons/{id}/leaderboards/ladder/{region}?page_size=200")
+    @GET("seasons/{id}/leaderboards/ladder/{region}?page_size=125")
     suspend fun getLeaderboard(
         @Path("id") id: String,
-        @Path("region") region: String
+        @Path("region") region: String,
+        @Query("page") page: String
     ): Response<Leaderboard>
 
-    @GET("seasons")
+    @GET("seasons?ids=all")
     suspend fun getSeasonList(
-        @Query("ids") ids: String
     ): Response<Leaderboards>
 }

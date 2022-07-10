@@ -19,6 +19,7 @@ class LeaderboardViewModel @Inject constructor(
 ) : ViewModel() {
 
 
+    var selectedSpinner: Int = 0
     var spinnerList = mutableListOf<String>()
 
     private var _leaderboard = MutableLiveData<MutableList<LeaderboardItem>>(mutableListOf())
@@ -37,7 +38,7 @@ class LeaderboardViewModel @Inject constructor(
     private fun getSeasonList() {
         viewModelScope.launch {
             try {
-                val response = repository.getLeaderboardList("all")
+                val response = repository.getLeaderboardList()
                 if (response.isSuccessful) {
                     response.body()!!.forEach {
                         _seasonNameList.value!!.add(
@@ -69,15 +70,22 @@ class LeaderboardViewModel @Inject constructor(
 
     fun getLeaderboard(position: Int) {
         viewModelScope.launch {
-            val response = repository.getLeaderboard(_seasonNameList.value?.get(position)!!.id.toString())
-            if (response.isSuccessful) {
-                _leaderboard.value?.clear()
-                response.body()!!.forEach {
-                    _leaderboard.value!!.add(it)
+            selectedSpinner = position
+            val backupList = _leaderboard.value!!
+            _leaderboard.value!!.clear()
+            _leaderboard.postValue(_leaderboard.value)
+            for (i in 0..1) {
+                val response =
+                    repository.getLeaderboard(_seasonNameList.value?.get(position)!!.id.toString(), i.toString())
+                if (response.isSuccessful) {
+                    response.body()!!.forEach {
+                        _leaderboard.value!!.add(it)
+                    }
+                    _leaderboard.postValue(_leaderboard.value)
+                } else {
+                    Log.e(TAG, "getLeaderboard: ${response.errorBody()!!.string()}")
+                    _leaderboard.postValue(backupList)
                 }
-                _leaderboard.postValue(_leaderboard.value)
-            } else {
-                Log.e(TAG, "getLeaderboard: ${response.errorBody()!!.string()}")
             }
         }
     }

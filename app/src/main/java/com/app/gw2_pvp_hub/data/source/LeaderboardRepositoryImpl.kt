@@ -12,18 +12,19 @@ class LeaderboardRepositoryImpl @Inject constructor(
     private val api: LeaderboardApi
 ): LeaderboardRepository {
 
-    override suspend fun getLeaderboard(season: String): Response<Leaderboard> {
+    override suspend fun getLeaderboard(season: String, page: String): Response<Leaderboard> {
         return withContext(IO) {
             api.getLeaderboard(
                 season,
-            "eu"
+            "eu",
+                page
             )
         }
     }
 
-    override suspend fun getLeaderboardList(ids: String): Response<Leaderboards> {
+    override suspend fun getLeaderboardList(): Response<Leaderboards> {
         return withContext(IO) {
-            api.getSeasonList("all")
+            api.getSeasonList()
         }
     }
 }

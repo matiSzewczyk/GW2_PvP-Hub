@@ -45,7 +45,6 @@ class LeaderboardFragment : Fragment(R.layout.fragment_leaderboard),
         setupRecyclerView()
         val seasonListObserver = Observer<MutableList<Season>> {
             if (it.isNotEmpty()) {
-                println(it)
                 setupSpinner()
             }
         }
@@ -66,6 +65,7 @@ class LeaderboardFragment : Fragment(R.layout.fragment_leaderboard),
         )
         seasonSpinner.adapter = seasonAdapter
         seasonSpinner.onItemSelectedListener = this
+        seasonSpinner.setSelection(viewModel.selectedSpinner)
     }
 
     private fun setupRecyclerView() = binding!!.leaderboardRecyclerView.apply {
