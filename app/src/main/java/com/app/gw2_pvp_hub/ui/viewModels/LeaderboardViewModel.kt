@@ -75,7 +75,6 @@ class LeaderboardViewModel @Inject constructor(
                 selectedSpinner = position
                 val backupList = _leaderboard.value!!
                 _leaderboard.value!!.clear()
-                _leaderboard.postValue(_leaderboard.value)
                 for (i in 0..1) {
                     val response = repository.getLeaderboard(
                         _seasonNameList.value?.get(position)!!.id.toString(), i.toString()
@@ -92,7 +91,7 @@ class LeaderboardViewModel @Inject constructor(
                     }
                 }
             } catch (e: java.lang.Exception) {
-                Log.e(TAG, "getLeaderboard: ${e.message}", )
+                Log.e(TAG, "getLeaderboard: ${e.message}")
             }
         }
     }
