@@ -48,6 +48,9 @@ class LeaderboardFragment : Fragment(R.layout.fragment_leaderboard),
         val seasonListObserver = Observer<MutableList<Season>> {
             if (it.isNotEmpty()) {
                 setupSpinner()
+                if (viewModel.firstLaunch) {// If it's the first time loading in
+                    viewModel.getLeaderboard(0)
+                }
             }
         }
         viewModel.seasonNameList.observe(viewLifecycleOwner, seasonListObserver)
@@ -66,12 +69,9 @@ class LeaderboardFragment : Fragment(R.layout.fragment_leaderboard),
             viewModel.spinnerList
         )
         seasonSpinner.adapter = seasonAdapter
-        seasonSpinner.setSelection(viewModel.selectedSpinner, false)    // false ensures intemselected is not called on every rotation
+        seasonSpinner.setSelection(viewModel.selectedSpinner, false)    // false ensures itemSelected is not called on every rotation
         seasonSpinner.onItemSelectedListener = this                             // essentially reloading the livedata
 
-        if (viewModel.firstLaunch) {
-            viewModel.getLeaderboard(0)
-        } // Grab leaderboard at the start
     }
 
     private fun setupRecyclerView() = binding!!.leaderboardRecyclerView.apply {
