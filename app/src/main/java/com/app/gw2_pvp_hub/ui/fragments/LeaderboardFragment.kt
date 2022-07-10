@@ -48,9 +48,7 @@ class LeaderboardFragment : Fragment(R.layout.fragment_leaderboard),
         val seasonListObserver = Observer<MutableList<Season>> {
             if (it.isNotEmpty()) {
                 setupSpinner()
-                if (viewModel.firstLaunch) {// If it's the first time loading in
-                    viewModel.getLeaderboard(0)
-                }
+                viewModel.isFirstLaunch() // If it's the first time loading in
             }
         }
         viewModel.seasonNameList.observe(viewLifecycleOwner, seasonListObserver)

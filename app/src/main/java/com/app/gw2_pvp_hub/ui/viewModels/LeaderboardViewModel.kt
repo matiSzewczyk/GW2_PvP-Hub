@@ -93,4 +93,10 @@ class LeaderboardViewModel @Inject constructor(
             }
         }
     }
+
+    fun isFirstLaunch() {
+        if (firstLaunch) {
+            getLeaderboard(0)
+        }
+    }
 }
