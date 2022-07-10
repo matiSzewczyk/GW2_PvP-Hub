@@ -14,5 +14,7 @@
         <!-- Customize your theme here. -->
 
         <item name="android:background">@color/gray</item>
+
+        <item name="fontFamily">@font/nunito_sans</item>
     </style>
 </resources>
