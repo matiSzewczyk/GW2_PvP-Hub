@@ -10,9 +10,7 @@ import com.app.gw2_pvp_hub.data.LeaderboardItem
 import com.app.gw2_pvp_hub.data.Season
 import com.app.gw2_pvp_hub.data.source.LeaderboardRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,7 +18,7 @@ class LeaderboardViewModel @Inject constructor(
     private val repository: LeaderboardRepository
 ) : ViewModel() {
 
-    var firstLaunch = true
+    private var firstLaunch = true
 
     var selectedSpinner: Int = 0
     var spinnerList = mutableListOf<String>()
@@ -73,23 +71,28 @@ class LeaderboardViewModel @Inject constructor(
 
     fun getLeaderboard(position: Int) {
         viewModelScope.launch {
-            selectedSpinner = position
-            val backupList = _leaderboard.value!!
-            _leaderboard.value!!.clear()
-            _leaderboard.postValue(_leaderboard.value)
-            for (i in 0..1) {
-                val response =
-                    repository.getLeaderboard(_seasonNameList.value?.get(position)!!.id.toString(), i.toString())
-                if (response.isSuccessful) {
-                    response.body()!!.forEach {
-                        _leaderboard.value!!.add(it)
+            try {
+                selectedSpinner = position
+                val backupList = _leaderboard.value!!
+                _leaderboard.value!!.clear()
+                _leaderboard.postValue(_leaderboard.value)
+                for (i in 0..1) {
+                    val response = repository.getLeaderboard(
+                        _seasonNameList.value?.get(position)!!.id.toString(), i.toString()
+                    )
+                    if (response.isSuccessful) {
+                        response.body()!!.forEach {
+                            _leaderboard.value!!.add(it)
+                        }
+                        _leaderboard.postValue(_leaderboard.value)
+                        firstLaunch = false
+                    } else {
+                        Log.e(TAG, "getLeaderboard: ${response.errorBody()!!.string()}")
+                        _leaderboard.postValue(backupList)
                     }
-                    _leaderboard.postValue(_leaderboard.value)
-                    firstLaunch = false
-                } else {
-                    Log.e(TAG, "getLeaderboard: ${response.errorBody()!!.string()}")
-                    _leaderboard.postValue(backupList)
                 }
+            } catch (e: java.lang.Exception) {
+                Log.e(TAG, "getLeaderboard: ${e.message}", )
             }
         }
     }
