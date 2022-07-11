@@ -8,6 +8,7 @@
         android:id="@+id/season_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:spinnerMode="dialog"
         app:layout_constraintBottom_toTopOf="@id/leaderboard_recycler_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
