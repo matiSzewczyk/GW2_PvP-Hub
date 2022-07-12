@@ -8,10 +8,12 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.app.gw2_pvp_hub.R
 import com.app.gw2_pvp_hub.databinding.FragmentLoginBinding
 import com.app.gw2_pvp_hub.ui.viewModels.LoginViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 class LoginFragment : Fragment() {
 
@@ -56,15 +58,13 @@ class LoginFragment : Fragment() {
         }
         viewModel.loginSuccessful.observe(viewLifecycleOwner, loginObserver)
 
-        val errorObserver = Observer<String> {
-            if (it.isNotEmpty()) {
+        lifecycleScope.launchWhenStarted {
+            viewModel.errorMsg.collectLatest {
                 Toast.makeText(
-                    context, it.toString(), Toast.LENGTH_SHORT
+                    context, it, Toast.LENGTH_SHORT
                 ).show()
-                viewModel.clearError()
             }
         }
-        viewModel.errorMsg.observe(viewLifecycleOwner, errorObserver)
 
         binding!!.apply {
             loginButton.setOnClickListener {
