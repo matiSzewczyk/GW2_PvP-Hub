@@ -5,10 +5,15 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.app.gw2_pvp_hub.MyApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.realm.mongodb.Credentials
 import io.realm.mongodb.User
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,12 +25,8 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
     private var _loginSuccessful = MutableLiveData(false)
     val loginSuccessful: LiveData<Boolean> get() = _loginSuccessful
 
-    private val _errorMsg = MutableLiveData("")
-    val errorMsg: LiveData<String> get() = _errorMsg
-
-    init {
-        _errorMsg.postValue("")
-    }
+    private val _errorMsg = MutableSharedFlow<String>()
+    val errorMsg: SharedFlow<String> get() = _errorMsg.asSharedFlow()
 
 
     fun registerAsync(username: String, password: String) {
@@ -37,7 +38,9 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
             } else {
                 Log.e(TAG, "registerAsync: failed to register ${it.error.errorMessage}")
                 _isLoading.postValue(false)
-                _errorMsg.postValue("Failed to register: ${it.error.errorMessage}")
+                viewModelScope.launch {
+                    _errorMsg.emit("Failed to register: ${it.error.errorMessage}")
+                }
             }
         }
     }
@@ -53,7 +56,9 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
                 createRealm(it.get())
                 _loginSuccessful.postValue(true)
             } else {
-                _errorMsg.postValue("Failed to login: ${it.error.errorMessage}")
+                viewModelScope.launch {
+                    _errorMsg.emit("Failed to login: ${it.error.errorMessage}")
+                }
                 Log.e(TAG, "loginAsync: Failed to log in ${it.error.errorMessage}")
             }
             _isLoading.postValue(false)
@@ -62,9 +67,5 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
 
     private fun createRealm(user: User) {
         MyApplication().createRealmInstance(user)
-    }
-
-    fun clearError() {
-        _errorMsg.postValue("")
     }
 }
