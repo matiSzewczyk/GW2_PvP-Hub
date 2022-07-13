@@ -66,7 +66,7 @@ class LeaderboardFragment : Fragment(),
         )
         seasonSpinner.adapter = seasonAdapter
         seasonSpinner.setSelection(viewModel.selectedSpinner, false)    // false ensures itemSelected is not called on every rotation
-        seasonSpinner.onItemSelectedListener = this                             // essentially reloading the livedata
+        seasonSpinner.onItemSelectedListener = this                             // essentially reloading the livedata !! Does NOT work on MIUI !!
 
     }
 
