@@ -2,8 +2,6 @@ package com.app.gw2_pvp_hub.ui.viewModels
 
 import android.content.ContentValues.TAG
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.gw2_pvp_hub.MyApplication
@@ -19,18 +17,21 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor() : ViewModel() {
 
-    private var _isLoading = MutableLiveData(false)
-    val isLoading: LiveData<Boolean> get() = _isLoading
+    sealed class LoginUiState {
+        object Success : LoginUiState()
+        object Loading : LoginUiState()
+        data class Error(val message: String) : LoginUiState()
+    }
 
-    private var _loginSuccessful = MutableLiveData(false)
-    val loginSuccessful: LiveData<Boolean> get() = _loginSuccessful
+    private val _uiState = MutableSharedFlow<LoginUiState>()
+    val uiState: SharedFlow<LoginUiState> get() = _uiState.asSharedFlow()
 
-    private val _errorMsg = MutableSharedFlow<String>()
-    val errorMsg: SharedFlow<String> get() = _errorMsg.asSharedFlow()
-
-
-    fun loginAsync(username: String, password: String) {
-        _isLoading.postValue(true)
+    fun loginAsync(username: String, password: String) = viewModelScope.launch {
+        if (username.isEmpty() || password.isEmpty()) {
+            _uiState.emit(LoginUiState.Error("Please fill all fields"))
+            return@launch
+        }
+        _uiState.emit(LoginUiState.Loading)
 
         MyApplication().app.loginAsync(
             Credentials.emailPassword(
@@ -40,14 +41,15 @@ class LoginViewModel @Inject constructor() : ViewModel() {
         ) {
             if (it.isSuccess) {
                 createRealm(it.get())
-                _loginSuccessful.postValue(true)
+                viewModelScope.launch {
+                    _uiState.emit(LoginUiState.Success)
+                }
             } else {
                 viewModelScope.launch {
-                    _errorMsg.emit("Failed to login: ${it.error.errorMessage}")
+                    _uiState.emit(LoginUiState.Error("Failed to login: ${it.error.errorMessage}"))
                 }
                 Log.e(TAG, "loginAsync: Failed to log in ${it.error.errorMessage}")
             }
-            _isLoading.postValue(false)
         }
     }
 

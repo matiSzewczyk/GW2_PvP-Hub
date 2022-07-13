@@ -5,15 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.app.gw2_pvp_hub.R
 import com.app.gw2_pvp_hub.databinding.FragmentLoginBinding
 import com.app.gw2_pvp_hub.ui.viewModels.LoginViewModel
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
 
@@ -34,50 +36,38 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val loadingObserver = Observer<Boolean> {
-            if (it == true) {
-                binding!!.apply {
-                    innerLayout.visibility = View.GONE
-                    progressBar.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collectLatest {
+                    when (it) {
+                        is LoginViewModel.LoginUiState.Success -> {
+                            findNavController().navigate(
+                                LoginFragmentDirections.actionGlobalLeaderboardFragment()
+                            )
+                        }
+                        is LoginViewModel.LoginUiState.Loading -> {
+                            binding!!.innerLayout.isVisible = false
+                            binding!!.progressBar.isVisible = true
+                        }
+                        is LoginViewModel.LoginUiState.Error -> {
+                            binding!!.innerLayout.isVisible = true
+                            binding!!.progressBar.isVisible = false
+                            Toast.makeText(
+                                context, it.message, Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
                 }
-            } else {
-                binding!!.apply {
-                    innerLayout.visibility = View.VISIBLE
-                    progressBar.visibility = View.GONE
-                }
             }
         }
-        viewModel.isLoading.observe(viewLifecycleOwner, loadingObserver)
 
-        val loginObserver = Observer<Boolean> {
-            if (it == true) {
-                val action =
-                    LoginFragmentDirections.actionGlobalLeaderboardFragment()
-                findNavController().navigate(action)
-            }
-        }
-        viewModel.loginSuccessful.observe(viewLifecycleOwner, loginObserver)
-
-        lifecycleScope.launchWhenStarted {
-            viewModel.errorMsg.collectLatest {
-                Toast.makeText(
-                    context, it, Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
 
         binding!!.apply {
             loginButton.setOnClickListener {
-                if (userName.text.isNotEmpty() && password.text.isNotEmpty()) {
-                    viewModel.loginAsync(
-                        userName.text.toString(),
-                        password.text.toString()
-                    )
-                } else {
-                    Toast.makeText(
-                        context, R.string.fill_all_values, Toast.LENGTH_SHORT
-                    ).show()
-                }
+                viewModel.loginAsync(
+                    userName.text.toString(),
+                    password.text.toString()
+                )
             }
             signupButton.setOnClickListener {
                 val action =
