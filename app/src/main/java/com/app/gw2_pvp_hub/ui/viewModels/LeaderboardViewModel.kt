@@ -31,9 +31,6 @@ class LeaderboardViewModel @Inject constructor(
 
     init {
         getSeasonList()
-//        viewModelScope.launch {
-//            repository.setSeasonList()
-//        }
     }
 
     private fun getSeasonList() {
