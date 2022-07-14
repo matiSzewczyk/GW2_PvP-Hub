@@ -2,8 +2,6 @@ package com.app.gw2_pvp_hub.ui.viewModels
 
 import android.content.ContentValues.TAG
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.gw2_pvp_hub.MyApplication
@@ -12,34 +10,47 @@ import io.realm.mongodb.Credentials
 import io.realm.mongodb.User
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor() : ViewModel() {
 
-    private var _isLoading = MutableLiveData(false)
-    val isLoading: LiveData<Boolean> get() = _isLoading
+    sealed class RegisterUiState {
+        object Success : RegisterUiState()
+        object Loading : RegisterUiState()
+        data class Error(val message: String) : RegisterUiState()
+    }
 
-    private var _loginSuccessful = MutableLiveData(false)
-    val loginSuccessful: LiveData<Boolean> get() = _loginSuccessful
+    private val _uiState = MutableSharedFlow<RegisterUiState>()
+    val uiState: SharedFlow<RegisterUiState> get() = _uiState
 
-    private val _errorMsg = MutableSharedFlow<String>()
-    val errorMsg: SharedFlow<String> get() = _errorMsg.asSharedFlow()
+    fun registerAsync(
+        username: String,
+        password: String,
+        passwordConfirm: String
+    ) = viewModelScope.launch {
 
-
-    fun registerAsync(username: String, password: String) {
-        _isLoading.postValue(true)
+        if (username.isEmpty() || password.isEmpty() || passwordConfirm.isEmpty()) {
+            _uiState.emit(RegisterUiState.Error("Please fill all the fields."))
+            return@launch
+        }
+        if (password != passwordConfirm) {
+            _uiState.emit(RegisterUiState.Error("Passwords do not match"))
+            return@launch
+        }
+        _uiState.emit(RegisterUiState.Loading)
 
         MyApplication().app.emailPassword.registerUserAsync(username, password) {
             if (it.isSuccess) {
                 loginAsync(username, password)
             } else {
-                Log.e(TAG, "registerAsync: failed to register ${it.error.errorMessage}")
-                _isLoading.postValue(false)
                 viewModelScope.launch {
-                    _errorMsg.emit("Failed to register: ${it.error.errorMessage}")
+                    _uiState.emit(
+                        RegisterUiState.Error(
+                            "Failed to register ${it.error.errorMessage}"
+                        )
+                    )
                 }
             }
         }
@@ -54,14 +65,19 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
         ) {
             if (it.isSuccess) {
                 createRealm(it.get())
-                _loginSuccessful.postValue(true)
+                viewModelScope.launch {
+                    _uiState.emit(RegisterUiState.Success)
+                }
             } else {
                 viewModelScope.launch {
-                    _errorMsg.emit("Failed to login: ${it.error.errorMessage}")
+                    _uiState.emit(
+                        RegisterUiState.Error(
+                            "Failed to login: ${it.error.errorMessage}"
+                        )
+                    )
                 }
                 Log.e(TAG, "loginAsync: Failed to log in ${it.error.errorMessage}")
             }
-            _isLoading.postValue(false)
         }
     }
 

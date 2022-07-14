@@ -61,7 +61,6 @@ class LoginFragment : Fragment() {
             }
         }
 
-
         binding!!.apply {
             loginButton.setOnClickListener {
                 viewModel.loginAsync(
