@@ -7,15 +7,15 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.app.gw2_pvp_hub.data.LeaderboardItem
-import com.app.gw2_pvp_hub.data.Season
 import com.app.gw2_pvp_hub.databinding.FragmentLeaderboardBinding
 import com.app.gw2_pvp_hub.ui.adapters.LeaderboardAdapter
 import com.app.gw2_pvp_hub.ui.viewModels.LeaderboardViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 class LeaderboardFragment : Fragment(),
     AdapterView.OnItemSelectedListener {
@@ -42,19 +42,28 @@ class LeaderboardFragment : Fragment(),
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
+        setupSpinner()
 
-        val seasonListObserver = Observer<MutableList<Season>> {
-            if (it.isNotEmpty()) {
-                setupSpinner()
-                viewModel.isFirstLaunch() // If it's the first time loading in
+        lifecycleScope.launchWhenStarted {
+            viewModel.uiState.collectLatest {
+                when (it) {
+                    is LeaderboardViewModel.LeaderboardUiState.LeaderboardState -> {
+                        leaderboardAdapter.notifyDataSetChanged()
+                    }
+                    LeaderboardViewModel.LeaderboardUiState.SpinnerListState -> {
+                        setupSpinner()
+                    }
+                    else -> Unit
+                }
             }
         }
-        viewModel.seasonNameList.observe(viewLifecycleOwner, seasonListObserver)
-
-        val leaderboardObserver = Observer<MutableList<LeaderboardItem>> {
-            leaderboardAdapter.notifyDataSetChanged()
+        lifecycleScope.launchWhenStarted {
+            viewModel.errorMsg.collectLatest {
+                Toast.makeText(
+                    context, it, Toast.LENGTH_SHORT
+                ).show()
+            }
         }
-        viewModel.leaderboard.observe(viewLifecycleOwner, leaderboardObserver)
     }
 
     private fun setupSpinner() {
@@ -62,17 +71,20 @@ class LeaderboardFragment : Fragment(),
         val seasonAdapter = ArrayAdapter(
             requireContext(),
             androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
-            viewModel.spinnerList
+            LeaderboardViewModel.LeaderboardUiState.SpinnerListState.spinnerList
         )
         seasonSpinner.adapter = seasonAdapter
-        seasonSpinner.setSelection(viewModel.selectedSpinner, false)    // false ensures itemSelected is not called on every rotation
-        seasonSpinner.onItemSelectedListener = this                             // essentially reloading the livedata !! Does NOT work on MIUI !!
+        seasonSpinner.setSelection(
+            LeaderboardViewModel.LeaderboardUiState.SpinnerSelectionState().selectedItem,
+            false
+        )
+        seasonSpinner.onItemSelectedListener = this
 
     }
 
     private fun setupRecyclerView() = binding!!.leaderboardRecyclerView.apply {
         leaderboardAdapter = LeaderboardAdapter(
-            viewModel.leaderboard.value!!
+            LeaderboardViewModel.LeaderboardUiState.LeaderboardState.leaderboardList
         )
         adapter = leaderboardAdapter
         layoutManager = LinearLayoutManager(context)

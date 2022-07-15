@@ -2,14 +2,13 @@ package com.app.gw2_pvp_hub.ui.viewModels
 
 import android.content.ContentValues.TAG
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.gw2_pvp_hub.data.LeaderboardItem
 import com.app.gw2_pvp_hub.data.Season
 import com.app.gw2_pvp_hub.data.source.LeaderboardRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,16 +17,25 @@ class LeaderboardViewModel @Inject constructor(
     private val repository: LeaderboardRepository
 ) : ViewModel() {
 
-    private var firstLaunch = true
+    sealed class LeaderboardUiState {
+        data class SpinnerSelectionState(val selectedItem: Int = 0) : LeaderboardUiState()
+        object LeaderboardState : LeaderboardUiState() {
+            var leaderboardList: MutableList<LeaderboardItem> = mutableListOf()
+        }
+        object SeasonListState : LeaderboardUiState() {
+            var seasonList: MutableList<Season> = mutableListOf()
+        }
+        object SpinnerListState : LeaderboardUiState() {
+            var spinnerList: MutableList<String> = mutableListOf()
+        }
+        object Empty : LeaderboardUiState()
+    }
 
-    var selectedSpinner: Int = 0
-    var spinnerList = mutableListOf<String>()
+    private val _uiState = MutableStateFlow<LeaderboardUiState>(LeaderboardUiState.Empty)
+    val uiState: StateFlow<LeaderboardUiState> get() = _uiState.asStateFlow()
 
-    private var _leaderboard = MutableLiveData<MutableList<LeaderboardItem>>(mutableListOf())
-    val leaderboard: LiveData<MutableList<LeaderboardItem>> get() = _leaderboard
-
-    private var _seasonNameList = MutableLiveData<MutableList<Season>>(mutableListOf())
-    val seasonNameList: LiveData<MutableList<Season>> get() = _seasonNameList
+    private val _errorMsg = MutableSharedFlow<String>()
+    val errorMsg: SharedFlow<String> get() = _errorMsg.asSharedFlow()
 
     init {
         getSeasonList()
@@ -39,29 +47,27 @@ class LeaderboardViewModel @Inject constructor(
                 val response = repository.getLeaderboardList()
                 if (response.isSuccessful) {
                     response.body()!!.forEach {
-                        _seasonNameList.value!!.add(
-                            Season(
-                                it.id,
-                                it.name,
-                                it.start
-                            )
-                        )
+                        LeaderboardUiState.SeasonListState.seasonList.add(Season(
+                            it.id,
+                            it.name,
+                            it.start
+                        ))
                     }
-                    // Order the list based on start date
-                    val orderedList = _seasonNameList.value!!.sortedByDescending {
+                    val orderedList = LeaderboardUiState.SeasonListState.seasonList.sortedByDescending {
                         it.start
                     }.toMutableList()
 
                     orderedList.forEach {
-                        spinnerList.add(it.name.toString())
+                        LeaderboardUiState.SpinnerListState.spinnerList.add(it.name.toString())
                     }
-
-                    _seasonNameList.postValue(orderedList)
+                    LeaderboardUiState.SeasonListState.seasonList = orderedList
+                    _uiState.emit(LeaderboardUiState.SeasonListState)
+                    _uiState.emit(LeaderboardUiState.SpinnerListState)
                 } else {
-                    Log.e(TAG, "getSeasonList: ${response.errorBody()!!.string()}")
+                    logError(response.errorBody()!!.string())
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "getSeasonList: ${e.message}")
+                logError(e.message.toString())
             }
         }
     }
@@ -69,33 +75,33 @@ class LeaderboardViewModel @Inject constructor(
     fun getLeaderboard(position: Int) {
         viewModelScope.launch {
             try {
-                selectedSpinner = position
-                val backupList = _leaderboard.value!!
-                _leaderboard.value!!.clear()
+                _uiState.emit(LeaderboardUiState.SpinnerSelectionState(position))
+                val backupList = LeaderboardUiState.LeaderboardState.leaderboardList
+                LeaderboardUiState.LeaderboardState.leaderboardList.clear()
                 for (i in 0..1) {
                     val response = repository.getLeaderboard(
-                        _seasonNameList.value?.get(position)!!.id.toString(), i.toString()
+                        LeaderboardUiState.SeasonListState.seasonList[position].id.toString(),
+                        i.toString()
                     )
                     if (response.isSuccessful) {
                         response.body()!!.forEach {
-                            _leaderboard.value!!.add(it)
+                            LeaderboardUiState.LeaderboardState.leaderboardList.add(it)
                         }
-                        _leaderboard.postValue(_leaderboard.value)
-                        firstLaunch = false
+                        _uiState.emit(LeaderboardUiState.LeaderboardState)
                     } else {
-                        Log.e(TAG, "getLeaderboard: ${response.errorBody()!!.string()}")
-                        _leaderboard.postValue(backupList)
+                        logError(response.errorBody()!!.string())
+                        LeaderboardUiState.LeaderboardState.leaderboardList = backupList
+                        _uiState.emit(LeaderboardUiState.LeaderboardState)
                     }
                 }
-            } catch (e: java.lang.Exception) {
-                Log.e(TAG, "getLeaderboard: ${e.message}")
+            } catch (e: Exception) {
+                logError(e.message.toString())
             }
         }
     }
 
-    fun isFirstLaunch() {
-        if (firstLaunch) {
-            getLeaderboard(0)
-        }
+    private fun logError(error: String) = viewModelScope.launch {
+        _errorMsg.emit("Failure: $error")
+        Log.e(TAG, "getLeaderboard: $error")
     }
 }
