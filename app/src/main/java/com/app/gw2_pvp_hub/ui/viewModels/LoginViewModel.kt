@@ -5,6 +5,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.gw2_pvp_hub.MyApplication
+import com.app.gw2_pvp_hub.data.models.ApiKey
+import com.app.gw2_pvp_hub.utils.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.realm.mongodb.Credentials
 import io.realm.mongodb.User
@@ -15,7 +17,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor() : ViewModel() {
+class LoginViewModel @Inject constructor(
+    private val preferences: UserPreferences
+) : ViewModel() {
 
     sealed class LoginUiState {
         object Success : LoginUiState()
@@ -42,11 +46,29 @@ class LoginViewModel @Inject constructor() : ViewModel() {
             if (it.isSuccess) {
                 createRealm(it.get())
                 viewModelScope.launch {
+                    it.get().apiKeys.createAsync("api_key1") { result ->
+                        if (result.isSuccess) {
+                            viewModelScope.launch {
+                                preferences.saveApiKey(
+                                    ApiKey(
+                                        result.get().name,
+                                        result.get().value
+                                    )
+                                )
+                            }
+                            Log.e(TAG, "loginAsync: ${result.get().name}")
+                        } else {
+                            Log.e(TAG, "loginAsync: ${result.error.errorMessage}")
+                        }
+                    }
+                }
+                viewModelScope.launch {
                     _uiState.emit(LoginUiState.Success)
                 }
             } else {
                 viewModelScope.launch {
                     _uiState.emit(LoginUiState.Error("Failed to login: ${it.error.errorMessage}"))
+
                 }
                 Log.e(TAG, "loginAsync: Failed to log in ${it.error.errorMessage}")
             }

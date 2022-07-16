@@ -1,7 +1,7 @@
 package com.app.gw2_pvp_hub.data.retrofit
 
-import com.app.gw2_pvp_hub.data.Leaderboard
-import com.app.gw2_pvp_hub.data.Leaderboards
+import com.app.gw2_pvp_hub.data.models.Leaderboard
+import com.app.gw2_pvp_hub.data.models.Leaderboards
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

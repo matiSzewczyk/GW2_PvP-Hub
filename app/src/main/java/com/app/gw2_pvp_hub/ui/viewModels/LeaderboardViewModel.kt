@@ -4,8 +4,8 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.app.gw2_pvp_hub.data.LeaderboardItem
-import com.app.gw2_pvp_hub.data.Season
+import com.app.gw2_pvp_hub.data.models.LeaderboardItem
+import com.app.gw2_pvp_hub.data.models.Season
 import com.app.gw2_pvp_hub.data.source.LeaderboardRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -47,13 +47,16 @@ class LeaderboardViewModel @Inject constructor(
                 val response = repository.getLeaderboardList()
                 if (response.isSuccessful) {
                     response.body()!!.forEach {
-                        LeaderboardUiState.SeasonListState.seasonList.add(Season(
+                        LeaderboardUiState.SeasonListState.seasonList.add(
+                            Season(
                             it.id,
                             it.name,
                             it.start
-                        ))
+                            )
+                        )
                     }
-                    val orderedList = LeaderboardUiState.SeasonListState.seasonList.sortedByDescending {
+                    val orderedList =
+                        LeaderboardUiState.SeasonListState.seasonList.sortedByDescending {
                         it.start
                     }.toMutableList()
 

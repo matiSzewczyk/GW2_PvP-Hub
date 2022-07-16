@@ -1,7 +1,7 @@
 package com.app.gw2_pvp_hub.data.source
 
-import com.app.gw2_pvp_hub.data.Leaderboard
-import com.app.gw2_pvp_hub.data.Leaderboards
+import com.app.gw2_pvp_hub.data.models.Leaderboard
+import com.app.gw2_pvp_hub.data.models.Leaderboards
 import retrofit2.Response
 
 interface LeaderboardRepository {

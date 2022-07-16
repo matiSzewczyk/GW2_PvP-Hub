@@ -1,8 +1,8 @@
 package com.app.gw2_pvp_hub.data.source
 
 import com.app.gw2_pvp_hub.data.retrofit.LeaderboardApi
-import com.app.gw2_pvp_hub.data.Leaderboard
-import com.app.gw2_pvp_hub.data.Leaderboards
+import com.app.gw2_pvp_hub.data.models.Leaderboard
+import com.app.gw2_pvp_hub.data.models.Leaderboards
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 import retrofit2.Response

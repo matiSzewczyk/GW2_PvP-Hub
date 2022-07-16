@@ -3,7 +3,7 @@ package com.app.gw2_pvp_hub.ui.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.app.gw2_pvp_hub.data.LeaderboardItem
+import com.app.gw2_pvp_hub.data.models.LeaderboardItem
 import com.app.gw2_pvp_hub.databinding.LeaderboardItemBinding
 
 class LeaderboardAdapter(
