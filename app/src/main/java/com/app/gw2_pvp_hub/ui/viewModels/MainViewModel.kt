@@ -8,6 +8,7 @@ import com.app.gw2_pvp_hub.utils.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.realm.mongodb.Credentials
 import io.realm.mongodb.User
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
@@ -38,11 +39,13 @@ class MainViewModel @Inject constructor(
                 if (it.isSuccess) {
                     createRealm(it.get())
                     viewModelScope.launch {
+                        delay(1000)
                         _login.emit(UiState.Success)
                     }
                 } else {
                     Log.e(TAG, "checkLoggedIn: ${it.error.errorMessage}")
                     viewModelScope.launch {
+                        delay(1000)
                         _login.emit(UiState.Error)
                     }
                 }
