@@ -57,6 +57,7 @@ class MainViewModel @Inject constructor(
     }
 
     private fun createRealm(user: User) {
+        println("called!")
         MyApplication().createRealmInstance(user)
     }
 }

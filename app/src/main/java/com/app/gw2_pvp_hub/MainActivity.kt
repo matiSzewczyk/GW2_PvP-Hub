@@ -3,6 +3,7 @@ package com.app.gw2_pvp_hub
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -39,11 +40,13 @@ class MainActivity : AppCompatActivity() {
             viewModel.login.collectLatest {
                 when (it) {
                     is MainViewModel.UiState.Success -> {
+                        binding.bottomNavigationView.isVisible = true
                         navController.navigate(
                             NavGraphDirections.actionGlobalLeaderboardFragment()
                         )
                     }
                     is MainViewModel.UiState.Error -> {
+                        binding.bottomNavigationView.isVisible = true
                         navController.navigate(
                             NavGraphDirections.actionGlobalLoginFragment()
                         )

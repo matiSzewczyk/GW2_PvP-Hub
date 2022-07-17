@@ -30,12 +30,14 @@ class MyApplication : Application() {
     }
 
     companion object {
-        lateinit var realm: Realm
+        var realm: Realm? = null
     }
 
     fun createRealmInstance(usr: User) {
-        user = usr
-        config = SyncConfiguration.Builder(user, partition).build()
-        realm = Realm.getInstance(config)
+        if (realm == null) {
+            user = usr
+            config = SyncConfiguration.Builder(user, partition).build()
+            realm = Realm.getInstance(config)
+        }
     }
 }
