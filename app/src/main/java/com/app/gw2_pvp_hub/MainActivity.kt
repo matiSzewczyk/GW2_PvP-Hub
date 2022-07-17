@@ -35,24 +35,35 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigationView.setupWithNavController(navController)
 
         viewModel.checkLoggedIn()
+        if (savedInstanceState == null) {
+            binding.bottomNavigationView.isVisible = false
+        }
 
         lifecycleScope.launchWhenStarted {
             viewModel.login.collectLatest {
                 when (it) {
                     is MainViewModel.UiState.Success -> {
-                        binding.bottomNavigationView.isVisible = true
-                        navController.navigate(
-                            NavGraphDirections.actionGlobalLeaderboardFragment()
-                        )
+                        if (savedInstanceState == null) {
+                            binding.bottomNavigationView.isVisible = true
+                            navController.navigate(
+                                NavGraphDirections.actionGlobalLeaderboardFragment()
+                            )
+                        }
                     }
                     is MainViewModel.UiState.Error -> {
-                        binding.bottomNavigationView.isVisible = true
-                        navController.navigate(
-                            NavGraphDirections.actionGlobalLoginFragment()
-                        )
+                        if (savedInstanceState == null) {
+                            binding.bottomNavigationView.isVisible = true
+                            navController.navigate(
+                                NavGraphDirections.actionGlobalLoginFragment()
+                            )
+                        }
                     }
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 }
