@@ -88,6 +88,7 @@ class LoginViewModel @Inject constructor(
                             apiKey.get().value
                         )
                     )
+                    Log.e(TAG, "createApiKey: Created ${apiKey.get().name}\t${apiKey.get().value}", )
                 }
             } else {
                 Log.e(TAG, "apiKeys.fetchAll(): ${apiKey.error.errorMessage}")
