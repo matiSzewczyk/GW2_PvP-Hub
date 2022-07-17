@@ -29,7 +29,11 @@ class MainViewModel @Inject constructor(
         object Error: UiState()
     }
 
-    fun checkLoggedIn() = viewModelScope.launch {
+    init {
+        checkLoggedIn()
+    }
+
+    private fun checkLoggedIn() = viewModelScope.launch {
         getApiKey()
         MyApplication().app.loginAsync(
             Credentials.apiKey(
@@ -57,7 +61,6 @@ class MainViewModel @Inject constructor(
     }
 
     private fun createRealm(user: User) {
-        println("called!")
         MyApplication().createRealmInstance(user)
     }
 }

@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavigationView.setupWithNavController(navController)
 
-        viewModel.checkLoggedIn()
         if (savedInstanceState == null) {
             binding.bottomNavigationView.isVisible = false
         }
@@ -61,9 +60,5 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 }
