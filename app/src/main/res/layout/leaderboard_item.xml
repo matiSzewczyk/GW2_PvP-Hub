@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="60dp"
     android:layout_marginBottom="1dp"
     android:background="@drawable/leaderboard_item_background">
 
@@ -13,7 +13,7 @@
         android:layout_weight=".15"
         android:backgroundTint="?attr/colorOnPrimary"
         android:textAlignment="center"
-        android:textColor="?attr/colorPrimary"
+        android:textColor="?attr/colorOnSecondary"
         android:textSize="16sp"
         android:textStyle="bold" />
 
@@ -24,7 +24,7 @@
         android:layout_gravity="center_vertical"
         android:layout_weight=".5"
         android:backgroundTint="?attr/colorOnPrimary"
-        android:textColor="?attr/colorPrimary"
+        android:textColor="?attr/colorOnSecondary"
         android:textSize="16sp" />
 
     <TextView
@@ -34,7 +34,7 @@
         android:layout_gravity="center_vertical"
         android:layout_weight=".15"
         android:backgroundTint="?attr/colorOnPrimary"
-        android:textColor="?attr/colorPrimary" />
+        android:textColor="?attr/colorOnSecondary" />
 
     <TextView
         android:id="@+id/player_wins"
@@ -43,7 +43,7 @@
         android:layout_gravity="center_vertical"
         android:layout_weight=".1"
         android:backgroundTint="?attr/colorOnPrimary"
-        android:textColor="?attr/colorPrimary" />
+        android:textColor="?attr/colorOnSecondary" />
 
     <TextView
         android:id="@+id/player_losses"
@@ -52,6 +52,6 @@
         android:layout_gravity="center_vertical"
         android:layout_weight=".1"
         android:backgroundTint="?attr/colorOnPrimary"
-        android:textColor="?attr/colorPrimary" />
+        android:textColor="?attr/colorOnSecondary" />
 
 </LinearLayout>

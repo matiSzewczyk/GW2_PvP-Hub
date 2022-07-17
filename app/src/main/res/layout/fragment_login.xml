@@ -44,6 +44,8 @@
             android:background="@android:color/transparent"
             android:text="@string/login"
             android:textColor="?attr/colorPrimary"
+            android:textSize="18sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/login_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -60,7 +62,7 @@
             <TextView
                 android:id="@+id/not_registered_text"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="18dp"
                 android:text="@string/not_registered_yet"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/signup_button"
@@ -69,10 +71,11 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/signup_button"
                 android:layout_width="wrap_content"
-                android:layout_height="20dp"
+                android:layout_height="18dp"
                 android:background="@android:color/transparent"
                 android:text="@string/sign_up"
-                android:textColor="?attr/colorPrimary"
+                android:textColor="?attr/colorOnSecondary"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/not_registered_text" />

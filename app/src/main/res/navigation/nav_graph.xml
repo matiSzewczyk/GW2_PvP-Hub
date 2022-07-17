@@ -21,4 +21,8 @@
         android:id="@+id/homeFragment"
         android:name="com.app.gw2_pvp_hub.ui.fragments.HomeFragment"
         android:label="HomeFragment" />
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.app.gw2_pvp_hub.ui.fragments.ChatFragment"
+        android:label="ChatFragment" /><action android:id="@+id/action_global_chatFragment2" app:destination="@id/chatFragment"/>
 </navigation>

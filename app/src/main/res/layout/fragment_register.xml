@@ -55,7 +55,9 @@
             android:layout_height="50dp"
             android:background="@android:color/transparent"
             android:text="@string/register"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="18sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/signup_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -72,7 +74,7 @@
             <TextView
                 android:id="@+id/not_registered_text"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="18dp"
                 android:text="@string/already_have_account"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/login_button"
@@ -81,10 +83,11 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/login_button"
                 android:layout_width="wrap_content"
-                android:layout_height="20dp"
+                android:layout_height="18dp"
                 android:background="@android:color/transparent"
                 android:text="@string/log_in"
-                android:textColor="@color/black"
+                android:textColor="?attr/colorOnSecondary"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/not_registered_text" />
