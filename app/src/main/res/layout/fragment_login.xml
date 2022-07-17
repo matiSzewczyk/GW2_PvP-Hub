@@ -43,7 +43,7 @@
             android:layout_height="50dp"
             android:background="@android:color/transparent"
             android:text="@string/login"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorPrimary"
             app:layout_constraintBottom_toTopOf="@id/login_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -72,7 +72,7 @@
                 android:layout_height="20dp"
                 android:background="@android:color/transparent"
                 android:text="@string/sign_up"
-                android:textColor="@color/black"
+                android:textColor="?attr/colorPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/not_registered_text" />

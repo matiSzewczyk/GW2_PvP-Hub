@@ -33,7 +33,8 @@ class MainViewModel @Inject constructor(
         getApiKey()
         MyApplication().app.loginAsync(
             Credentials.apiKey(
-                apiKey
+//                apiKey
+            "khi"
             )
         ) {
             if (it.isSuccess) {

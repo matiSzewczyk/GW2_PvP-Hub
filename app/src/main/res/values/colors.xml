@@ -11,6 +11,7 @@
     <color name="red_700">#9c142b</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#eeeeee</color>
+    <color name="gray_dark">#111111</color>
     <color name="light_gray">#efefef</color>
     <color name="dark_red">#300402</color>
     <color name="dark_green">#02301a</color>
