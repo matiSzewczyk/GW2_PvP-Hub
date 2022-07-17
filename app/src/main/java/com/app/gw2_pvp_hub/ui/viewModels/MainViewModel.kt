@@ -30,32 +30,30 @@ class MainViewModel @Inject constructor(
     }
 
     fun checkLoggedIn() = viewModelScope.launch {
-        if (hasApiKey()) {
-            MyApplication().app.loginAsync(
-                Credentials.apiKey(
-                    apiKey
-                )
-            ) {
-                if (it.isSuccess) {
-                    createRealm(it.get())
-                    viewModelScope.launch {
-                        delay(1000)
-                        _login.emit(UiState.Success)
-                    }
-                } else {
-                    Log.e(TAG, "checkLoggedIn: ${it.error.errorMessage}")
-                    viewModelScope.launch {
-                        delay(1000)
-                        _login.emit(UiState.Error)
-                    }
+        getApiKey()
+        MyApplication().app.loginAsync(
+            Credentials.apiKey(
+                apiKey
+            )
+        ) {
+            if (it.isSuccess) {
+                createRealm(it.get())
+                viewModelScope.launch {
+                    delay(1000)
+                    _login.emit(UiState.Success)
+                }
+            } else {
+                Log.e(TAG, "checkLoggedIn: ${it.error.errorMessage}")
+                viewModelScope.launch {
+                    delay(1000)
+                    _login.emit(UiState.Error)
                 }
             }
         }
     }
 
-    private suspend fun hasApiKey(): Boolean {
+    private suspend fun getApiKey() {
         apiKey = preferences.getApiKey().toString()
-        return apiKey != null
     }
 
     private fun createRealm(user: User) {

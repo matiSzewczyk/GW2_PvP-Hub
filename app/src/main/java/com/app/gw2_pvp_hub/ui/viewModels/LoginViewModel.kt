@@ -8,6 +8,7 @@ import com.app.gw2_pvp_hub.MyApplication
 import com.app.gw2_pvp_hub.data.models.ApiKey
 import com.app.gw2_pvp_hub.utils.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.realm.mongodb.App
 import io.realm.mongodb.Credentials
 import io.realm.mongodb.User
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -42,35 +43,54 @@ class LoginViewModel @Inject constructor(
                 username,
                 password
             )
-        ) {
-            if (it.isSuccess) {
-                createRealm(it.get())
-                viewModelScope.launch {
-                    it.get().apiKeys.createAsync("api_key1") { result ->
-                        if (result.isSuccess) {
-                            viewModelScope.launch {
-                                preferences.saveApiKey(
-                                    ApiKey(
-                                        result.get().name,
-                                        result.get().value
-                                    )
-                                )
-                            }
-                            Log.e(TAG, "loginAsync: ${result.get().name}")
-                        } else {
-                            Log.e(TAG, "loginAsync: ${result.error.errorMessage}")
-                        }
-                    }
-                }
+        ) { user ->
+            if (user.isSuccess) {
+                createRealm(user.get())
+                deleteApiKeys(user)
                 viewModelScope.launch {
                     _uiState.emit(LoginUiState.Success)
                 }
             } else {
                 viewModelScope.launch {
-                    _uiState.emit(LoginUiState.Error("Failed to login: ${it.error.errorMessage}"))
+                    _uiState.emit(LoginUiState.Error("Failed to login: ${user.error.errorMessage}"))
 
                 }
-                Log.e(TAG, "loginAsync: Failed to log in ${it.error.errorMessage}")
+                Log.e(TAG, "loginAsync: Failed to log in ${user.error.errorMessage}")
+            }
+        }
+    }
+
+    private fun deleteApiKeys(user: App.Result<User>) {
+        user.get().apiKeys.fetchAll { result ->
+            result.get().forEach { apiKey ->
+                if (result.isSuccess) {
+                    user.get().apiKeys.deleteAsync(apiKey.id) {
+                        if (it.isSuccess) {
+                            createApiKey(user)
+                        } else {
+                            Log.e(TAG, "deleteApiKeys: ${it.error.errorMessage}")
+                        }
+                    }
+                } else {
+                    Log.e(TAG, "Failure: ${result.error.errorMessage}")
+                }
+            }
+        }
+    }
+
+    private fun createApiKey(user: App.Result<User>) {
+        user.get().apiKeys.createAsync("api_key") { apiKey ->
+            if (apiKey.isSuccess) {
+                viewModelScope.launch {
+                    preferences.saveApiKey(
+                        ApiKey(
+                            apiKey.get().name,
+                            apiKey.get().value
+                        )
+                    )
+                }
+            } else {
+                Log.e(TAG, "apiKeys.fetchAll(): ${apiKey.error.errorMessage}")
             }
         }
     }
