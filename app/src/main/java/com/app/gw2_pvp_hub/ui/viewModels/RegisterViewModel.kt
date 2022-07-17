@@ -88,19 +88,19 @@ class RegisterViewModel @Inject constructor(
     }
 
     private fun createApiKey(user: App.Result<User>) {
-        user.get().apiKeys.createAsync("api_key") { result ->
-            if (result.isSuccess) {
+        user.get().apiKeys.createAsync("api_key") { apiKey ->
+            if (apiKey.isSuccess) {
                 viewModelScope.launch {
                     preferences.saveApiKey(
                         ApiKey(
-                            result.get().name,
-                            result.get().value
+                            apiKey.get().name,
+                            apiKey.get().value
                         )
                     )
                 }
-                Log.e(TAG, "Created key: ${result.get().name}")
+                Log.e(TAG, "Created key: ${apiKey.get().name}")
             } else {
-                Log.e(TAG, "Failed creating key: ${result.error.errorMessage}")
+                Log.e(TAG, "Failed creating key: ${apiKey.error.errorMessage}")
             }
         }
     }
