@@ -38,6 +38,8 @@ class ChatFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupRecyclerView()
+
         realmChangeListener = RealmChangeListener {
             viewModel.messageReceived(it)
         }
@@ -54,7 +56,7 @@ class ChatFragment : Fragment() {
         }
     }
 
-    fun setupRecyclerView() = binding!!.chatRecyclerView.apply {
+    private fun setupRecyclerView() = binding!!.chatRecyclerView.apply {
         chatAdapter = ChatAdapter(
             ChatViewModel.UiState.ChatState.chatList
         )
