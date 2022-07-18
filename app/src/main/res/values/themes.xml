@@ -4,7 +4,7 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/red_500</item>
         <item name="colorPrimaryVariant">@color/red_500</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/gray</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/red_700</item>
         <item name="colorSecondaryVariant">@color/red_700</item>
@@ -13,7 +13,7 @@
         <item name="android:statusBarColor" >?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
 
-        <item name="android:background">@color/gray</item>
+        <item name="android:background">?attr/colorOnPrimary</item>
 
         <item name="fontFamily">@font/red_hat_display</item>
     </style>

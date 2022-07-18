@@ -2,18 +2,18 @@
     <!-- Base application theme. -->
     <style name="Theme.GW2_PvPHub" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimary">@color/red_500</item>
         <item name="colorPrimaryVariant">@color/red_500</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorOnPrimary">@color/gray_dark</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/red_700</item>
         <item name="colorSecondaryVariant">@color/red_700</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" >?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
 
-        <item name="android:background">@color/gray_dark</item>
+        <item name="android:background">?attr/colorOnPrimary</item>
 
         <item name="fontFamily">@font/red_hat_display</item>
     </style>
