@@ -41,10 +41,9 @@ class ChatFragment : Fragment() {
         setupRecyclerView()
 
         realmChangeListener = RealmChangeListener {
-            println("called: RealmListener")
             viewModel.messageReceived(it)
         }
-        viewModel.chatMessages?.addChangeListener(realmChangeListener)
+        viewModel.chatMessages.addChangeListener(realmChangeListener)
 
         binding!!.apply {
             sendMessageButton.setOnClickListener {

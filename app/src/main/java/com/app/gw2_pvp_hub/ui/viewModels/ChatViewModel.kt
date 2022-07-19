@@ -1,5 +1,6 @@
 package com.app.gw2_pvp_hub.ui.viewModels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.gw2_pvp_hub.MyApplication
@@ -20,6 +21,8 @@ class ChatViewModel @Inject constructor(
     private val repository: ChatRepository
 ) : ViewModel() {
 
+    private val TAG: String = "ChatViewModel"
+
     sealed class UiState {
         data class Error(val errorMessage: String) : UiState()
         object ChatState : UiState() {
@@ -28,12 +31,10 @@ class ChatViewModel @Inject constructor(
         object Empty : UiState()
     }
 
-
     private val _uiState = MutableStateFlow<UiState>(UiState.Empty)
     val uiState: StateFlow<UiState> get() = _uiState.asStateFlow()
 
-    var chatMessages: RealmResults<ChatMessage>?
-        = MyApplication.realm!!.where(ChatMessage::class.java).findAll()
+    var chatMessages: RealmResults<ChatMessage> = MyApplication.realm!!.where(ChatMessage::class.java).findAll()
 
     init {
         getMessages()
@@ -41,19 +42,23 @@ class ChatViewModel @Inject constructor(
 
     private fun getMessages() = viewModelScope.launch {
 
-        MyApplication.realm!!.where(ChatMessage::class.java)
-            .findAll()
-            .sort("timestamp", Sort.ASCENDING).forEach {
-                UiState.ChatState.chatList.add(
-                    Message(
-                        it.id,
-                        it.userName,
-                        it.content,
-                        it.timestamp
+        try {
+            MyApplication.realm!!.where(ChatMessage::class.java)
+                .findAll()
+                .sort("timestamp", Sort.ASCENDING).forEach {
+                    UiState.ChatState.chatList.add(
+                        Message(
+                            it.id,
+                            it.userName,
+                            it.content,
+                            it.timestamp
+                        )
                     )
-                )
-            }
-        _uiState.emit(UiState.ChatState)
+                }
+            _uiState.emit(UiState.ChatState)
+        } catch (e: Exception) {
+            Log.e(TAG, "getMessages: ${e.message}")
+        }
     }
 
     fun messageReceived(message: RealmResults<ChatMessage>) {
