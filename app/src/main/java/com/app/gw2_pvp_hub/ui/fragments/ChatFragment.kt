@@ -47,7 +47,7 @@ class ChatFragment : Fragment() {
 
         binding!!.apply {
             sendMessageButton.setOnClickListener {
-                viewModel.senMessage(chatInput.text.toString())
+                viewModel.sendMessage(chatInput.text.toString())
             }
         }
         

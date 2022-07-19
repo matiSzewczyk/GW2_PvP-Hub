@@ -75,7 +75,7 @@ class ChatViewModel @Inject constructor(
         }
     }
 
-    fun senMessage(message: String) = viewModelScope.launch {
+    fun sendMessage(message: String) = viewModelScope.launch {
         repository.sendToRealm(message)
     }
 
