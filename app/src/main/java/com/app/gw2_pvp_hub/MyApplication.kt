@@ -1,8 +1,6 @@
 package com.app.gw2_pvp_hub
 
 import android.app.Application
-import android.content.ContentValues.TAG
-import android.util.Log
 import dagger.hilt.android.HiltAndroidApp
 import io.realm.Realm
 import io.realm.mongodb.App
@@ -21,7 +19,6 @@ class MyApplication : Application() {
     }
     private val partition = "default"
     private lateinit var config: SyncConfiguration
-    private lateinit var user: User
 
     override fun onCreate() {
         super.onCreate()
@@ -31,12 +28,13 @@ class MyApplication : Application() {
 
     companion object {
         var realm: Realm? = null
+        var user: User? = null
     }
 
     fun createRealmInstance(usr: User) {
         if (realm == null) {
             user = usr
-            config = SyncConfiguration.Builder(user, partition).build()
+            config = SyncConfiguration.Builder(user!!, partition).build()
             realm = Realm.getInstance(config)
         }
     }

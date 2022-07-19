@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.gw2_pvp_hub.data.models.ChatMessage
@@ -23,7 +23,7 @@ class ChatFragment : Fragment() {
 
     private lateinit var chatAdapter: ChatAdapter
 
-    private val viewModel: ChatViewModel by viewModels()
+    private val viewModel: ChatViewModel by activityViewModels()
     private lateinit var realmChangeListener: RealmChangeListener<RealmResults<ChatMessage>>
 
     override fun onCreateView(
@@ -41,7 +41,15 @@ class ChatFragment : Fragment() {
         setupRecyclerView()
 
         realmChangeListener = RealmChangeListener {
+            println("called: RealmListener")
             viewModel.messageReceived(it)
+        }
+        viewModel.chatMessages?.addChangeListener(realmChangeListener)
+
+        binding!!.apply {
+            sendMessageButton.setOnClickListener {
+                viewModel.senMessage(chatInput.text.toString())
+            }
         }
         
         lifecycleScope.launchWhenStarted { 
@@ -49,6 +57,9 @@ class ChatFragment : Fragment() {
                 when (it) {
                     is ChatViewModel.UiState.ChatState -> {
                         chatAdapter.notifyItemInserted(chatAdapter.itemCount - 1)
+                        binding!!.chatRecyclerView.scrollToPosition(
+                            chatAdapter.itemCount - 1
+                        )
                     }
                     else -> Unit
                 }
