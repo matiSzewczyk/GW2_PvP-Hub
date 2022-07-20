@@ -55,9 +55,10 @@ class ChatViewModel @Inject constructor(
                         )
                     )
                 }
-            _uiState.emit(UiState.ChatState)
+            _uiState.tryEmit(UiState.ChatState)
         } catch (e: Exception) {
             Log.e(TAG, "getMessages: ${e.message}")
+            _uiState.emit(UiState.Error("Error: ${e.message}"))
         }
     }
 

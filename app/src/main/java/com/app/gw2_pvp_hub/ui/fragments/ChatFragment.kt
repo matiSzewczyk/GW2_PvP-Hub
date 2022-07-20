@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -42,12 +43,17 @@ class ChatFragment : Fragment() {
 
         realmChangeListener = RealmChangeListener {
             viewModel.messageReceived(it)
+            chatAdapter.notifyDataSetChanged()
+            binding!!.chatRecyclerView.scrollToPosition(
+                chatAdapter.itemCount - 1
+            )
         }
         viewModel.chatMessages.addChangeListener(realmChangeListener)
 
         binding!!.apply {
             sendMessageButton.setOnClickListener {
                 viewModel.sendMessage(chatInput.text.toString())
+                resetUi()
             }
         }
         
@@ -55,14 +61,26 @@ class ChatFragment : Fragment() {
             viewModel.uiState.collectLatest { 
                 when (it) {
                     is ChatViewModel.UiState.ChatState -> {
-                        chatAdapter.notifyItemInserted(chatAdapter.itemCount - 1)
+                        chatAdapter.notifyDataSetChanged()
                         binding!!.chatRecyclerView.scrollToPosition(
                             chatAdapter.itemCount - 1
                         )
                     }
+
+                    is ChatViewModel.UiState.Error -> {
+                        Toast.makeText(
+                            context, it.errorMessage, Toast.LENGTH_SHORT
+                        ).show()
+                    }
                     else -> Unit
                 }
             }
+        }
+    }
+
+    private fun resetUi() {
+        binding!!.apply {
+            chatInput.text.clear()
         }
     }
 
