@@ -11,11 +11,13 @@ class ChatRepositoryImpl @Inject constructor() : ChatRepository {
         MyApplication.realm!!.executeTransactionAsync {
 
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
+            val formatter2 = DateTimeFormatter.ofPattern("HH:mm:ss")
 
             val chatMessage = ChatMessage(
                 MyApplication.user!!.profile.email.toString(),
                 message,
-                LocalDateTime.now().format(formatter)
+                LocalDateTime.now().format(formatter), // Timestamp for precise comparisons.
+                LocalDateTime.now().format(formatter2) // Timestamp for the ui.
             )
             it.copyToRealmOrUpdate(chatMessage)
         }

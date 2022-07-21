@@ -20,6 +20,19 @@
         tools:text="Username1234" />
 
     <TextView
+        android:id="@+id/message_timestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="italic"
+        android:textSize="14sp"
+        android:layout_marginTop="10dp"
+        android:background="?attr/colorOnPrimary"
+        android:textColor="?attr/colorOnSecondary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="20:20.21" />
+
+    <TextView
         android:id="@+id/message_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

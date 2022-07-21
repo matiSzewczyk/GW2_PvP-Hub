@@ -8,7 +8,8 @@ import java.util.*
 open class ChatMessage(
     var userName: String? = null,
     var content: String? = null,
-    var timestamp: String? = null
+    var timestamp: String? = null,
+    var messageTime: String? = null
 ) : RealmObject() {
     @PrimaryKey
     @RealmField("_id")

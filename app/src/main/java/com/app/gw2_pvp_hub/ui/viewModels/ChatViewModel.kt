@@ -51,7 +51,8 @@ class ChatViewModel @Inject constructor(
                             it.id,
                             it.userName,
                             it.content,
-                            it.timestamp
+                            it.timestamp,
+                            it.messageTime
                         )
                     )
                 }
@@ -69,7 +70,8 @@ class ChatViewModel @Inject constructor(
                     message.last()!!.id,
                     message.last()!!.userName,
                     message.last()!!.content,
-                    message.last()!!.timestamp
+                    message.last()!!.timestamp,
+                    message.last()!!.messageTime
                 )
             )
             _uiState.emit(UiState.ChatState)
@@ -79,5 +81,4 @@ class ChatViewModel @Inject constructor(
     fun sendMessage(message: String) = viewModelScope.launch {
         repository.sendToRealm(message)
     }
-
 }

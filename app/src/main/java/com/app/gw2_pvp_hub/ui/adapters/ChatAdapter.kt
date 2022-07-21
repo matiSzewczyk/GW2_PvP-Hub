@@ -28,6 +28,7 @@ class ChatAdapter(
         holder.binding.apply {
             messageUsername.text = messages[position].userName
             messageContent.text = messages[position].content
+            messageTimestamp.text = messages[position].messageTime
         }
     }
 
