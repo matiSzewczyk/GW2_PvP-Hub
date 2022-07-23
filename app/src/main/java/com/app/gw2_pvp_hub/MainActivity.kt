@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -15,7 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NavController.OnDestinationChangedListener {
 
     private lateinit var navController: NavController
     private val viewModel: MainViewModel by viewModels()
@@ -34,6 +35,8 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavigationView.setupWithNavController(navController)
 
+        navController.addOnDestinationChangedListener(this)
+
         if (savedInstanceState == null) {
             binding.bottomNavigationView.isVisible = false
         }
@@ -42,23 +45,28 @@ class MainActivity : AppCompatActivity() {
             viewModel.login.collectLatest {
                 when (it) {
                     is MainViewModel.UiState.Success -> {
-                        if (savedInstanceState == null) {
-                            binding.bottomNavigationView.isVisible = true
-                            navController.navigate(
-                                NavGraphDirections.actionGlobalLeaderboardFragment()
-                            )
-                        }
+                        navController.navigate(
+                            NavGraphDirections.actionGlobalLeaderboardFragment()
+                        )
                     }
                     is MainViewModel.UiState.Error -> {
-                        if (savedInstanceState == null) {
-                            binding.bottomNavigationView.isVisible = true
-                            navController.navigate(
-                                NavGraphDirections.actionGlobalLoginFragment()
-                            )
-                        }
+                        navController.navigate(
+                            NavGraphDirections.actionGlobalLoginFragment()
+                        )
                     }
                 }
             }
         }
+    }
+
+    override fun onDestinationChanged(
+        controller: NavController,
+        destination: NavDestination,
+        arguments: Bundle?
+    ) {
+        binding.bottomNavigationView.isVisible = !(
+                destination.id == R.id.loginFragment ||
+                destination.id == R.id.registerFragment
+            )
     }
 }
