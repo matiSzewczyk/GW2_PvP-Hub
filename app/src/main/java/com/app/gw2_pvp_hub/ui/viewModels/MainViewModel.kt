@@ -20,7 +20,7 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val TAG = "MainViewModel"
-    private var apiKey: String? = null
+
     private val _login = MutableSharedFlow<UiState>()
     val login: SharedFlow<UiState> get() = _login
 
@@ -34,10 +34,9 @@ class MainViewModel @Inject constructor(
     }
 
     private fun checkLoggedIn() = viewModelScope.launch {
-        getApiKey()
         MyApplication().app.loginAsync(
             Credentials.apiKey(
-                apiKey
+                getApiKey()
             )
         ) {
             if (it.isSuccess) {
@@ -56,8 +55,8 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getApiKey() {
-        apiKey = preferences.getApiKey().toString()
+    private suspend fun getApiKey(): String {
+        return preferences.getApiKey().toString()
     }
 
     private fun createRealm(user: User) {
