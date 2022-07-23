@@ -30,6 +30,7 @@
             android:layout_height="50dp"
             android:background="@null"
             android:hint="@string/type_a_message"
+            android:inputType="textCapSentences"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
