@@ -65,7 +65,14 @@ class ChatViewModel @Inject constructor(
 
     fun messageReceived(message: RealmResults<ChatMessage>) {
         viewModelScope.launch {
-            if (message.last()!!.id != UiState.ChatState.chatList.last().id) {
+            if (message.isNotEmpty()) {
+                if (UiState.ChatState.chatList.isNotEmpty()) {
+                    if (message.last()?.id == UiState.ChatState.chatList.last().id) {
+                        UiState.ChatState.chatList.last().content = message.last()?.content
+                        _uiState.emit(UiState.ChatState)
+                        return@launch
+                    }
+                }
                 UiState.ChatState.chatList.add(
                     Message(
                         message.last()!!.id,
@@ -75,10 +82,8 @@ class ChatViewModel @Inject constructor(
                         message.last()!!.messageTime
                     )
                 )
-                _uiState.emit(UiState.ChatState)
             } else {
-                UiState.ChatState.chatList.last().content = message.last()!!.content
-                _uiState.emit(UiState.ChatState)
+                UiState.ChatState.chatList.clear()
             }
         }
     }

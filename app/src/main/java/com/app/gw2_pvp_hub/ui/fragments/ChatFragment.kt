@@ -44,9 +44,11 @@ class ChatFragment : Fragment() {
         realmChangeListener = RealmChangeListener {
             viewModel.messageReceived(it)
             chatAdapter.notifyDataSetChanged()
-            binding!!.chatRecyclerView.scrollToPosition(
-                chatAdapter.itemCount - 1
-            )
+            if (chatAdapter.itemCount > 0) {
+                binding!!.chatRecyclerView.scrollToPosition(
+                    chatAdapter.itemCount - 1
+                )
+            }
         }
         viewModel.chatMessages.addChangeListener(realmChangeListener)
 
