@@ -84,6 +84,7 @@ class ChatViewModel @Inject constructor(
                 )
             } else {
                 UiState.ChatState.chatList.clear()
+                _uiState.emit(UiState.ChatState)
             }
         }
     }
