@@ -61,7 +61,6 @@ class ChatFragment : Fragment() {
             viewModel.uiState.collectLatest { 
                 when (it) {
                     is ChatViewModel.UiState.ChatState -> {
-                        println("emit called")
                         chatAdapter.notifyDataSetChanged()
                         binding!!.chatRecyclerView.scrollToPosition(
                             chatAdapter.itemCount - 1
