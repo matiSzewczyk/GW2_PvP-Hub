@@ -34,7 +34,8 @@ class MyApplication : Application() {
     fun createRealmInstance(usr: User) {
         if (realm == null) {
             user = usr
-            config = SyncConfiguration.Builder(user!!, partition).build()
+            config = SyncConfiguration.Builder(user!!, partition)
+                .build()
             realm = Realm.getInstance(config)
         }
     }

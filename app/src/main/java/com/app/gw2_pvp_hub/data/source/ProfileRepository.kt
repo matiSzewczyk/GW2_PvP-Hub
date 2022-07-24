@@ -4,6 +4,6 @@ import android.graphics.Bitmap
 import io.realm.mongodb.User
 
 interface ProfileRepository {
-    suspend fun getProfilePicture(user: User): Bitmap
+    suspend fun getProfilePicture(user: User): String
     suspend fun setProfilePicture(bitmap: Bitmap)
 }

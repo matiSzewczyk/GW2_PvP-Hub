@@ -1,6 +1,7 @@
 package com.app.gw2_pvp_hub.data.source
 
 import android.graphics.Bitmap
+import android.util.Base64
 import android.util.Log
 import com.app.gw2_pvp_hub.MyApplication
 import io.realm.mongodb.User
@@ -11,14 +12,22 @@ import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
 class ProfileRepositoryImpl @Inject constructor(
-
-): ProfileRepository{
+): ProfileRepository {
 
     private val TAG: String = "ProfileRepositoryImpl"
 
-    override suspend fun getProfilePicture(user: User): Bitmap {
+    override suspend fun getProfilePicture(user: User): String {
         return withContext(IO) {
-            MyApplication.user!!.customData["profilePicture"] as Bitmap
+            val collection = MyApplication.user!!
+                .getMongoClient("mongodb-atlas")
+                .getDatabase("GW2-PvP_HubDB")
+                .getCollection("custom-user-data")
+
+            try {
+                collection.findOne().get()["profilePicture"].toString()
+            } catch (e: Exception) {
+                Log.e(TAG, "getProfilePicture: ${e.message}")
+            }.toString()
         }
     }
 
@@ -29,13 +38,13 @@ class ProfileRepositoryImpl @Inject constructor(
             .getCollection("custom-user-data")
 
         val user = MyApplication.user
-
         val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
         val image = stream.toByteArray()
+        val base64 = Base64.encodeToString(image, Base64.DEFAULT)
 
-        collection.insertOne(Document("user-id", user!!.id)
-            .append("profilePicture", image)
+        collection.insertOne(Document("_id", user!!.id)
+            .append("profilePicture", base64)
             .append("_partition", "default")).getAsync {
                 if (it.isSuccess) {
                     Log.d(
@@ -43,6 +52,9 @@ class ProfileRepositoryImpl @Inject constructor(
                     "setProfilePicture: Profile picture inserted " +
                             it.get().insertedId
                     )
+                    MyApplication.realm!!.executeTransactionAsync {
+                        user.refreshCustomData()
+                    }
                 } else {
                     Log.e(
                         TAG,

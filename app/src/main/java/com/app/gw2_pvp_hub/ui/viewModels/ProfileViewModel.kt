@@ -1,6 +1,8 @@
 package com.app.gw2_pvp_hub.ui.viewModels
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.util.Base64
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.gw2_pvp_hub.MyApplication
@@ -26,13 +28,17 @@ class ProfileViewModel @Inject constructor(
     val uiState: StateFlow<UiState> get() = _uiState.asStateFlow()
 
     init {
-//        getProfilePicture()
+        getProfilePicture()
     }
 
     private fun getProfilePicture() {
         viewModelScope.launch {
-            val image = repository.getProfilePicture(MyApplication.user!!)
-            _uiState.emit(UiState.ProfileImage(image))
+            val base64 = repository.getProfilePicture(MyApplication.user!!)
+            if (base64 != "1") {
+                val byteArray = Base64.decode(base64, Base64.DEFAULT)
+                val image = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+                _uiState.emit(UiState.ProfileImage(image))
+            }
         }
     }
 
