@@ -1,14 +1,13 @@
 package com.app.gw2_pvp_hub.data.source
 
 import android.graphics.Bitmap
-import android.util.Base64
 import android.util.Log
 import com.app.gw2_pvp_hub.MyApplication
+import com.app.gw2_pvp_hub.utils.ImageHandler
 import io.realm.mongodb.User
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 import org.bson.Document
-import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
 class ProfileRepositoryImpl @Inject constructor(
@@ -24,7 +23,7 @@ class ProfileRepositoryImpl @Inject constructor(
                 .getCollection("custom-user-data")
 
             try {
-                collection.findOne().get()["profilePicture"].toString()
+                collection.findOne().get()["profilePicture"]
             } catch (e: Exception) {
                 Log.e(TAG, "getProfilePicture: ${e.message}")
             }.toString()
@@ -38,13 +37,10 @@ class ProfileRepositoryImpl @Inject constructor(
             .getCollection("custom-user-data")
 
         val user = MyApplication.user
-        val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-        val image = stream.toByteArray()
-        val base64 = Base64.encodeToString(image, Base64.DEFAULT)
+        val image = ImageHandler().convertToString(bitmap)
 
         collection.insertOne(Document("_id", user!!.id)
-            .append("profilePicture", base64)
+            .append("profilePicture", image)
             .append("_partition", "default")).getAsync {
                 if (it.isSuccess) {
                     Log.d(
