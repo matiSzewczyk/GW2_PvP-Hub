@@ -77,7 +77,7 @@ class ProfileFragment : Fragment(), View.OnClickListener {
         }
 
         binding!!.apply {
-            changeProfilePictureButton.setOnClickListener(this@ProfileFragment)
+            profilePicture.setOnClickListener(this@ProfileFragment)
         }
     }
 
